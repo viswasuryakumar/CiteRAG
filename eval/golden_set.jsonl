@@ -1,0 +1,50 @@
+{"id": 1, "question": "How do I return a 404 error?", "relevant": [{"file": "docs/en/docs/tutorial/handling-errors.md", "lines": [22, 71]}]}
+{"id": 2, "question": "How can I run something after the response has already been sent to the client?", "relevant": [{"file": "docs/en/docs/tutorial/background-tasks.md", "lines": [1, 63]}]}
+{"id": 3, "question": "My React app on another domain gets blocked by the browser when it calls my API. How do I allow it?", "relevant": [{"file": "docs/en/docs/tutorial/cors.md", "lines": [1, 78]}]}
+{"id": 4, "question": "How do I read a value from the URL, like the 5 in /items/5?", "relevant": [{"file": "docs/en/docs/tutorial/path-params.md", "lines": [1, 28]}]}
+{"id": 5, "question": "How do I make a query parameter optional?", "relevant": [{"file": "docs/en/docs/tutorial/query-params.md", "lines": [60, 73]}]}
+{"id": 6, "question": "How do I force the client to always send a certain query parameter?", "relevant": [{"file": "docs/en/docs/tutorial/query-params.md", "lines": [129, 194]}, {"file": "docs/en/docs/tutorial/query-params-str-validations.md", "lines": [199, 238]}]}
+{"id": 7, "question": "How do I limit how long a search string in the URL can be?", "relevant": [{"file": "docs/en/docs/tutorial/query-params-str-validations.md", "lines": [19, 168]}]}
+{"id": 8, "question": "How can I accept several values for the same query parameter, like ?tag=a&tag=b?", "relevant": [{"file": "docs/en/docs/tutorial/query-params-str-validations.md", "lines": [239, 312]}]}
+{"id": 9, "question": "How do I reject an item ID in the path if it's zero or negative?", "relevant": [{"file": "docs/en/docs/tutorial/path-params-numeric-validations.md", "lines": [94, 122]}]}
+{"id": 10, "question": "How do I accept JSON data in a POST request?", "relevant": [{"file": "docs/en/docs/tutorial/body.md", "lines": [1, 78]}]}
+{"id": 11, "question": "How do I receive data from an HTML form instead of JSON?", "relevant": [{"file": "docs/en/docs/tutorial/request-forms.md", "lines": [1, 54]}]}
+{"id": 12, "question": "How can users upload a file to my API?", "relevant": [{"file": "docs/en/docs/tutorial/request-files.md", "lines": [1, 111]}]}
+{"id": 13, "question": "How can a client upload several files in one request?", "relevant": [{"file": "docs/en/docs/tutorial/request-files.md", "lines": [148, 173]}]}
+{"id": 14, "question": "How do I read the User-Agent sent by the browser?", "relevant": [{"file": "docs/en/docs/tutorial/header-params.md", "lines": [1, 56]}]}
+{"id": 15, "question": "How do I read a cookie that the client sent?", "relevant": [{"file": "docs/en/docs/tutorial/cookie-params.md", "lines": [1, 45]}]}
+{"id": 16, "question": "How do I make sure the user's password is never included in what my endpoint returns?", "relevant": [{"file": "docs/en/docs/tutorial/response-model.md", "lines": [69, 168]}, {"file": "docs/en/docs/tutorial/extra-models.md", "lines": [1, 140]}]}
+{"id": 17, "question": "How do I make my create endpoint respond with 201 instead of 200?", "relevant": [{"file": "docs/en/docs/tutorial/response-status-code.md", "lines": [1, 41]}, {"file": "docs/en/docs/tutorial/path-operation-configuration.md", "lines": [11, 30]}]}
+{"id": 18, "question": "How do I reuse the same setup logic, like getting a DB session, across many endpoints?", "relevant": [{"file": "docs/en/docs/tutorial/dependencies/index.md", "lines": [1, 142]}, {"file": "docs/en/docs/tutorial/dependencies/dependencies-with-yield.md", "lines": [26, 49]}]}
+{"id": 19, "question": "How do I close the database connection after each request is done?", "relevant": [{"file": "docs/en/docs/tutorial/dependencies/dependencies-with-yield.md", "lines": [1, 61]}]}
+{"id": 20, "question": "How do I run an API key check on every endpoint without repeating it everywhere?", "relevant": [{"file": "docs/en/docs/tutorial/dependencies/global-dependencies.md", "lines": [1, 16]}, {"file": "docs/en/docs/tutorial/dependencies/dependencies-in-path-operation-decorators.md", "lines": [1, 69]}]}
+{"id": 21, "question": "My main.py is getting huge. How do I split my endpoints into several files?", "relevant": [{"file": "docs/en/docs/tutorial/bigger-applications.md", "lines": [1, 111]}, {"file": "docs/en/docs/tutorial/bigger-applications.md", "lines": [291, 466]}]}
+{"id": 22, "question": "How do I measure how long every request takes to process?", "relevant": [{"file": "docs/en/docs/tutorial/middleware.md", "lines": [1, 67]}]}
+{"id": 23, "question": "How do I serve images and CSS files from a folder?", "relevant": [{"file": "docs/en/docs/tutorial/static-files.md", "lines": [1, 45]}]}
+{"id": 24, "question": "How do I write automated tests for my endpoints?", "relevant": [{"file": "docs/en/docs/tutorial/testing.md", "lines": [1, 58]}]}
+{"id": 25, "question": "In my tests, how do I swap the real database dependency for a fake one?", "relevant": [{"file": "docs/en/docs/advanced/testing-dependencies.md", "lines": [1, 53]}]}
+{"id": 26, "question": "How do I build a login where users send a username and password and get a token back?", "relevant": [{"file": "docs/en/docs/tutorial/security/simple-oauth2.md", "lines": [1, 184]}, {"file": "docs/en/docs/tutorial/security/first-steps.md", "lines": [89, 186]}]}
+{"id": 27, "question": "How should I store user passwords safely?", "relevant": [{"file": "docs/en/docs/tutorial/security/oauth2-jwt.md", "lines": [53, 130]}]}
+{"id": 28, "question": "How do I create and check JWT tokens?", "relevant": [{"file": "docs/en/docs/tutorial/security/oauth2-jwt.md", "lines": [1, 52]}, {"file": "docs/en/docs/tutorial/security/oauth2-jwt.md", "lines": [131, 200]}]}
+{"id": 29, "question": "Inside an endpoint, how do I get the user who is currently logged in?", "relevant": [{"file": "docs/en/docs/tutorial/security/get-current-user.md", "lines": [1, 62]}]}
+{"id": 30, "question": "How do I connect my app to a SQL database?", "relevant": [{"file": "docs/en/docs/tutorial/sql-databases.md", "lines": [1, 167]}]}
+{"id": 31, "question": "How do I load a machine learning model once when the app starts and free it when it stops?", "relevant": [{"file": "docs/en/docs/advanced/events.md", "lines": [1, 86]}]}
+{"id": 32, "question": "How do I read configuration from environment variables or a .env file?", "relevant": [{"file": "docs/en/docs/advanced/settings.md", "lines": [1, 124]}, {"file": "docs/en/docs/advanced/settings.md", "lines": [185, 319]}]}
+{"id": 33, "question": "How do I return an HTML page instead of JSON?", "relevant": [{"file": "docs/en/docs/advanced/custom-response.md", "lines": [35, 93]}, {"file": "docs/en/docs/advanced/templates.md", "lines": [5, 133]}]}
+{"id": 34, "question": "How do I send a big response bit by bit instead of all at once?", "relevant": [{"file": "docs/en/docs/advanced/stream-data.md", "lines": [1, 50]}, {"file": "docs/en/docs/advanced/custom-response.md", "lines": [94, 218]}, {"file": "docs/en/docs/tutorial/stream-json-lines.md", "lines": [1, 108]}]}
+{"id": 35, "question": "How do I set a cookie on the client from my endpoint?", "relevant": [{"file": "docs/en/docs/advanced/response-cookies.md", "lines": [1, 51]}]}
+{"id": 36, "question": "How do I add my own header to a response?", "relevant": [{"file": "docs/en/docs/advanced/response-headers.md", "lines": [1, 41]}]}
+{"id": 37, "question": "How do I build a live chat where the server pushes messages to the browser over one open connection?", "relevant": [{"file": "docs/en/docs/advanced/websockets.md", "lines": [1, 180]}]}
+{"id": 38, "question": "Should my endpoint functions be async def or plain def?", "relevant": [{"file": "docs/en/docs/async.md", "lines": [1, 56]}]}
+{"id": 39, "question": "How do I package my app in a Docker container?", "relevant": [{"file": "docs/en/docs/deployment/docker.md", "lines": [94, 348]}]}
+{"id": 40, "question": "What command should I use to run the app in production?", "relevant": [{"file": "docs/en/docs/deployment/manually.md", "lines": [1, 44]}]}
+{"id": 41, "question": "How do I compress responses so they download faster?", "relevant": [{"file": "docs/en/docs/advanced/middleware.md", "lines": [75, 87]}]}
+{"id": 42, "question": "How do I force all requests to use HTTPS?", "relevant": [{"file": "docs/en/docs/advanced/middleware.md", "lines": [54, 61]}]}
+{"id": 43, "question": "Can I run my existing Flask app inside a FastAPI app?", "relevant": [{"file": "docs/en/docs/advanced/wsgi.md", "lines": [1, 51]}]}
+{"id": 44, "question": "How do I change the URL of the interactive docs page, or turn it off?", "relevant": [{"file": "docs/en/docs/tutorial/metadata.md", "lines": [107, 120]}]}
+{"id": 45, "question": "How do I set the title, description and version shown in the API docs?", "relevant": [{"file": "docs/en/docs/tutorial/metadata.md", "lines": [1, 32]}]}
+{"id": 46, "question": "How do I mark an old endpoint as deprecated?", "relevant": [{"file": "docs/en/docs/tutorial/path-operation-configuration.md", "lines": [91, 104]}]}
+{"id": 47, "question": "How do I group my endpoints into sections in the docs page?", "relevant": [{"file": "docs/en/docs/tutorial/path-operation-configuration.md", "lines": [31, 50]}, {"file": "docs/en/docs/tutorial/metadata.md", "lines": [41, 94]}]}
+{"id": 48, "question": "How do I turn a Pydantic model that contains a datetime into plain JSON-compatible data?", "relevant": [{"file": "docs/en/docs/tutorial/encoder.md", "lines": [1, 35]}]}
+{"id": 49, "question": "How do I update only the fields the client actually sent?", "relevant": [{"file": "docs/en/docs/tutorial/body-updates.md", "lines": [29, 100]}]}
+{"id": 50, "question": "How do I only allow a path parameter to be one of a few fixed values?", "relevant": [{"file": "docs/en/docs/tutorial/path-params.md", "lines": [131, 201]}]}
