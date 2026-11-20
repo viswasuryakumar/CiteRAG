@@ -1,0 +1,1965 @@
+{
+  "faithfulness": 0.8895207570207571,
+  "rows": [
+    {
+      "id": 1,
+      "question": "How do I return a 404 error?",
+      "answer": "To return a 404 error, use `HTTPException`. The excerpts say that \"To return HTTP responses with errors to the client you use `HTTPException`\" [3], and that 404 is the \"Not Found\" response in the 400-499 client error range [2].\n\nThe excerpts don't include a code sample showing how to raise it with a 404 status, so I can't give you the exact syntax from them. The usual pattern in FastAPI is `raise HTTPException(status_code=404, detail=\"...\")`, but that comes from outside these excerpts.",
+      "claims": [
+        {
+          "claim": "To return a 404 error, use HTTPException.",
+          "supported": true
+        },
+        {
+          "claim": "To return HTTP responses with errors to the client, you use HTTPException.",
+          "supported": true
+        },
+        {
+          "claim": "404 is the \"Not Found\" response in the 400-499 client error range.",
+          "supported": true
+        },
+        {
+          "claim": "The usual pattern in FastAPI is `raise HTTPException(status_code=404, detail=\"...\")`.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.75
+    },
+    {
+      "id": 2,
+      "question": "How can I run something after the response has already been sent to the client?",
+      "answer": "You can define **background tasks** to run *after* a response is returned. This suits work the client doesn't need to wait for, such as sending an email after an action or processing an uploaded file while returning a \"Accepted\" (HTTP 202) response [1].\n\nThe excerpts don't include the code for defining background tasks, so I can't show the exact syntax from them.",
+      "claims": [
+        {
+          "claim": "You can define background tasks to run after a response is returned.",
+          "supported": true
+        },
+        {
+          "claim": "Background tasks suit work the client doesn't need to wait for.",
+          "supported": true
+        },
+        {
+          "claim": "Sending an email after an action is an example of work that can be run as a background task.",
+          "supported": true
+        },
+        {
+          "claim": "Processing an uploaded file can be handled by returning an \"Accepted\" (HTTP 202) response and processing the file in the background.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 3,
+      "question": "My React app on another domain gets blocked by the browser when it calls my API. How do I allow it?",
+      "answer": "Add FastAPI's `CORSMiddleware` and list your React app's origin in `allow_origins`. The excerpts describe the options but don't include the full code snippet, so the exact setup is outside what I can show.\n\nThe key settings are:\n\n- **`allow_origins`**: a list of origins allowed to make cross-origin requests, for example `['https://example.org', 'https://www.example.org']`. You can use `['*']` to allow any origin [3]. For your React app, put its exact origin here, such as `http://localhost:3000` during development or your deployed frontend URL.\n- **`allow_methods`**: defaults to `['GET']`, so you need to add methods like `POST` or `PUT` if your app uses them. `['*']` allows all standard methods [3].\n- **`allow_headers`**: defaults to `[]`. Browsers always allow `Accept`, `Accept-Language`, `Content-Language`, and `Content-Type` for simple CORS requests [2]. If your React app sends other headers, such as `Authorization`, you need to list them here, or use `['*']` to allow all headers [2].\n- **`allow_credentials`**: defaults to `False`. Set it to `True` if your frontend sends cookies with cross-origin requests [2].\n\nThe defaults are restrictive, which is why your browser blocks the calls until you explicitly enable the origin, methods, or headers [1].",
+      "claims": [
+        {
+          "claim": "Add FastAPI's CORSMiddleware to the app to allow the React app's cross-origin requests",
+          "supported": false
+        },
+        {
+          "claim": "The allow_origins setting is a list of origins permitted to make cross-origin requests",
+          "supported": true
+        },
+        {
+          "claim": "An example allow_origins value is ['https://example.org', 'https://www.example.org']",
+          "supported": true
+        },
+        {
+          "claim": "allow_origins can use ['*'] to allow any origin",
+          "supported": true
+        },
+        {
+          "claim": "For a React app in development, the exact origin to list is http://localhost:3000",
+          "supported": false
+        },
+        {
+          "claim": "The allow_methods setting defaults to ['GET']",
+          "supported": true
+        },
+        {
+          "claim": "POST or PUT must be added to allow_methods if the app uses them",
+          "supported": false
+        },
+        {
+          "claim": "allow_methods can use ['*'] to allow all standard methods",
+          "supported": true
+        },
+        {
+          "claim": "The allow_headers setting defaults to an empty list",
+          "supported": true
+        },
+        {
+          "claim": "Browsers always allow Accept, Accept-Language, Content-Language and Content-Type headers for simple CORS requests",
+          "supported": true
+        },
+        {
+          "claim": "An Authorization header sent by the React app must be listed in allow_headers",
+          "supported": false
+        },
+        {
+          "claim": "allow_headers can use ['*'] to allow all headers",
+          "supported": true
+        },
+        {
+          "claim": "The allow_credentials setting defaults to False",
+          "supported": true
+        },
+        {
+          "claim": "allow_credentials should be set to True if the frontend sends cookies with cross-origin requests",
+          "supported": true
+        },
+        {
+          "claim": "The CORSMiddleware defaults are restrictive, so origins, methods, or headers must be explicitly enabled for browsers to permit cross-domain use",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.7333333333333333
+    },
+    {
+      "id": 4,
+      "question": "How do I read a value from the URL, like the 5 in /items/5?",
+      "answer": "In the excerpts, a value in the path is read as a **path parameter** of your *path operation function*. The excerpts show the behavior but not the declaration code. [4] refers to a path parameter named `item_id` with the type `int`. When the value is `\"foo\"`, FastAPI returns a validation error with `\"loc\": [\"path\", \"item_id\"]`, which shows that the value is read from the path and converted to the declared type.\n\n[1] also shows the naming link: `url_for('read_item', id=id)` passes the value under the same name as the path parameter, which suggests that the path segment name and the function parameter name must match.\n\nThe excerpts don't include the exact code for declaring a path parameter, so I can't show you the full syntax from them.",
+      "claims": [
+        {
+          "claim": "In the excerpts, a value in the path is read as a path parameter of the path operation function.",
+          "supported": true
+        },
+        {
+          "claim": "The excerpts refer to a path parameter named item_id with the type int.",
+          "supported": true
+        },
+        {
+          "claim": "When the value is \"foo\", FastAPI returns a validation error with loc [\"path\", \"item_id\"].",
+          "supported": true
+        },
+        {
+          "claim": "The validation error shows that the value is read from the path and converted to the declared type.",
+          "supported": true
+        },
+        {
+          "claim": "url_for('read_item', id=id) passes the value under the same name as the path parameter.",
+          "supported": true
+        },
+        {
+          "claim": "The path segment name and the function parameter name must match.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.8333333333333334
+    },
+    {
+      "id": 5,
+      "question": "How do I make a query parameter optional?",
+      "answer": "To make a query parameter optional, give it a default value. Any default, including `None`, makes the parameter optional (not required) [1].\n\nFor example, `q: str | None = None` makes `q` optional. When you also need validation, put the `Query` metadata in `Annotated` and keep the default outside it: `q: Annotated[str | None, Query(min_length=3)] = None` [2].\n\nDon't rely on the `| None` type alone. The type `str | None` allows `None` as a value, but without a default the parameter is still required [4]. The same applies to models: using `| None` without a default still makes the parameter required [3].",
+      "claims": [
+        {
+          "claim": "To make a query parameter optional, give it a default value.",
+          "supported": true
+        },
+        {
+          "claim": "Any default value, including None, makes a query parameter optional (not required).",
+          "supported": true
+        },
+        {
+          "claim": "`q: str | None = None` makes `q` optional.",
+          "supported": true
+        },
+        {
+          "claim": "When validation is needed, the Query metadata goes inside Annotated while the default stays outside it, as in `q: Annotated[str | None, Query(min_length=3)] = None`.",
+          "supported": true
+        },
+        {
+          "claim": "The type `str | None` allows None as a Python value but does not make a query parameter optional.",
+          "supported": true
+        },
+        {
+          "claim": "Without a default value, a parameter typed `str | None` is still required.",
+          "supported": true
+        },
+        {
+          "claim": "Using `| None` without a default still makes a parameter in a parameter model required.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 6,
+      "question": "How do I force the client to always send a certain query parameter?",
+      "answer": "The excerpts don't show a dedicated \"required\" setting, but they imply how to do it. [5] says that \"having a default value of any type, including `None`, makes the parameter optional (not required).\" It follows that a query parameter declared **without** a default value is required, so the client must send it. For example, `limit: int` with no default would be required, while `limit: int = 10` or `limit: int | None = None` would be optional.\n\nThe excerpts don't include a code example confirming this behavior, so check the query parameters section of the tutorial to verify it.\n\nExcerpts [1] and [2] cover a different case: rejecting *extra* query parameters that aren't declared, using Pydantic's `forbid` setting. They don't make a parameter required.",
+      "claims": [
+        {
+          "claim": "Having a default value of any type, including None, makes a query parameter optional (not required).",
+          "supported": true
+        },
+        {
+          "claim": "A query parameter declared without a default value is required, so the client must send it.",
+          "supported": false
+        },
+        {
+          "claim": "`limit: int` with no default would be a required query parameter.",
+          "supported": false
+        },
+        {
+          "claim": "`limit: int = 10` would be an optional query parameter.",
+          "supported": true
+        },
+        {
+          "claim": "`limit: int | None = None` would be an optional query parameter.",
+          "supported": true
+        },
+        {
+          "claim": "Excerpts [1] and [2] cover rejecting extra query parameters that aren't declared, using Pydantic's forbid setting.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.6666666666666666
+    },
+    {
+      "id": 7,
+      "question": "How do I limit how long a search string in the URL can be?",
+      "answer": "You can limit a query parameter's length with `max_length` on `Query()`, placed inside `Annotated`. The docs use this example: \"having `Query(max_length=50)` inside of `Annotated`, we are telling FastAPI that we want it to have **additional validation** for this value, we want it to have maximum 50 characters.\" [2]\n\nThe docs apply this to an optional `q` parameter, so that even though it is optional, \"whenever it is provided, its length doesn't exceed 50 characters.\" [1]\n\nThe excerpts I have don't include the full code sample, so check the page `docs/en/docs/tutorial/query-params-str-validations.md` for the complete snippet. The `Query()` function is used here because the value is a query parameter. The docs note that `Path()`, `Body()`, `Header()`, and `Cookie()` accept the same arguments. [2]",
+      "claims": [
+        {
+          "claim": "You can limit a query parameter's length with max_length on Query().",
+          "supported": true
+        },
+        {
+          "claim": "Query(max_length=50) is placed inside Annotated.",
+          "supported": true
+        },
+        {
+          "claim": "Using Query(max_length=50) inside Annotated tells FastAPI to add validation that the value has a maximum of 50 characters.",
+          "supported": true
+        },
+        {
+          "claim": "The docs apply the max length limit to an optional q parameter.",
+          "supported": true
+        },
+        {
+          "claim": "For the optional q parameter, whenever it is provided, its length must not exceed 50 characters.",
+          "supported": true
+        },
+        {
+          "claim": "Query() is used in this example because the value is a query parameter.",
+          "supported": true
+        },
+        {
+          "claim": "Path(), Body(), Header(), and Cookie() accept the same arguments as Query().",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 8,
+      "question": "How can I accept several values for the same query parameter, like ?tag=a&tag=b?",
+      "answer": "To accept several values for the same query parameter, declare it with `Query` and a list type. The docs show this with `q`:\n\n```python\nfrom typing import Annotated\n\nfrom fastapi import FastAPI, Query\n\napp = FastAPI()\n\n\n@app.get(\"/items/\")\nasync def read_items(q: Annotated[list[str] | None, Query()] = None):\n    query_items = {\"q\": q}\n    return query_items\n```\n\nWith a URL like `http://localhost:8000/items/?q=foo&q=bar`, the parameter receives both values [2].\n\nYour `?tag=a&tag=b` case works the same way: use `tag: Annotated[list[str] | None, Query()] = None`. The docs also show repeated keys in a query-parameter model, such as `?tags=red&tags=blue`, where each model validates its parameters independently [1].",
+      "claims": [
+        {
+          "claim": "To accept several values for the same query parameter, declare it with `Query` and a list type.",
+          "supported": true
+        },
+        {
+          "claim": "The docs show this with the parameter `q`.",
+          "supported": true
+        },
+        {
+          "claim": "The docs show the function signature `q: Annotated[list[str] | None, Query()] = None` for receiving multiple values.",
+          "supported": true
+        },
+        {
+          "claim": "With the URL `http://localhost:8000/items/?q=foo&q=bar`, the parameter receives both values.",
+          "supported": false
+        },
+        {
+          "claim": "The `?tag=a&tag=b` case works the same way, using `tag: Annotated[list[str] | None, Query()] = None`.",
+          "supported": false
+        },
+        {
+          "claim": "The docs show repeated keys in a query-parameter model, such as `?tags=red&tags=blue`.",
+          "supported": true
+        },
+        {
+          "claim": "Each model in a query-parameter model validates the query parameters independently.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.7142857142857143
+    },
+    {
+      "id": 9,
+      "question": "How do I reject an item ID in the path if it's zero or negative?",
+      "answer": "To reject zero or negative item IDs, declare the path parameter with `Path()` and a numeric constraint. Use `ge=1` to require the value to be greater than or equal to 1, which excludes zero and negatives [4]:\n\n```python\nfrom typing import Annotated\n\nfrom fastapi import FastAPI, Path\n\napp = FastAPI()\n\n\n@app.get(\"/items/{item_id}\")\nasync def read_items(\n    item_id: Annotated[int, Path(title=\"The ID of the item to get\", ge=1)], q: str\n):\n    results = {\"item_id\": item_id}\n    if q:\n        results.update({\"q\": q})\n    return results\n```\n\nYou can also use `gt=0`, which means \"greater than\" zero, so zero and negative values are rejected [2]. The excerpts describe `gt` as \"greater than\" and `ge` as \"greater than or equal\" [2][4].\n\nThe excerpts don't show the exact error response for a failed numeric constraint. They only show the error format for a value that can't be parsed as an integer, such as `\"foo\"` [3].",
+      "claims": [
+        {
+          "claim": "To reject zero or negative item IDs, you declare the path parameter with Path() and a numeric constraint.",
+          "supported": true
+        },
+        {
+          "claim": "Using ge=1 requires the path parameter value to be greater than or equal to 1.",
+          "supported": true
+        },
+        {
+          "claim": "Using ge=1 excludes zero and negative values.",
+          "supported": true
+        },
+        {
+          "claim": "The example code declares item_id as Annotated[int, Path(title=\"The ID of the item to get\", ge=1)] in a read_items path operation.",
+          "supported": true
+        },
+        {
+          "claim": "The gt=0 constraint can also be used on a path parameter.",
+          "supported": true
+        },
+        {
+          "claim": "gt=0 means greater than zero, so zero and negative values are rejected.",
+          "supported": true
+        },
+        {
+          "claim": "The excerpts describe gt as \"greater than\" and ge as \"greater than or equal\".",
+          "supported": true
+        },
+        {
+          "claim": "The excerpts show the error format returned when a path parameter value cannot be parsed as an integer, such as \"foo\".",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 10,
+      "question": "How do I accept JSON data in a POST request?",
+      "answer": "The excerpts don't include a full guide for accepting JSON, but they show the pattern indirectly.\n\nIn [4], a POST endpoint takes a parameter typed with a model, `def post_data_in_out(body: DataInputOutput)`, and returns it. The model's fields define the JSON the endpoint expects. [3] shows what such a JSON body looks like, with required and optional fields such as `name`, `price`, `description`, and `tax`. Optional fields with a default of `None` can be left out.\n\n[1] and [2] indicate that a body expected as JSON uses `application/json`. They also say you can't combine `Body` fields expected as JSON with `Form` or `File` parameters in the same path operation, because the request body is encoded differently.\n\nThe excerpts don't show the exact import or the complete request example, so I don't know the full details beyond this.",
+      "claims": [
+        {
+          "claim": "The excerpts show a POST endpoint that takes a model-typed parameter, `def post_data_in_out(body: DataInputOutput)`.",
+          "supported": true
+        },
+        {
+          "claim": "The `post_data_in_out` endpoint returns the parameter it receives.",
+          "supported": true
+        },
+        {
+          "claim": "The fields of the model define the JSON that the endpoint expects.",
+          "supported": false
+        },
+        {
+          "claim": "The excerpts show an example JSON body with the fields name, price, description, and tax.",
+          "supported": true
+        },
+        {
+          "claim": "In the example JSON body, `description` and `tax` are optional, and `name` and `price` are required.",
+          "supported": true
+        },
+        {
+          "claim": "Optional fields with a default value of `None` can be left out of the JSON body.",
+          "supported": true
+        },
+        {
+          "claim": "A body expected as JSON uses the `application/json` content type.",
+          "supported": true
+        },
+        {
+          "claim": "A path operation cannot declare `Body` fields expected as JSON together with `Form` or `File` parameters.",
+          "supported": true
+        },
+        {
+          "claim": "Declaring JSON `Body` fields alongside `Form` or `File` parameters is not possible because the request body is encoded differently.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.8888888888888888
+    },
+    {
+      "id": 11,
+      "question": "How do I receive data from an HTML form instead of JSON?",
+      "answer": "To receive form fields instead of JSON, use `Form`. First, install `python-multipart`, which is required for forms [1]:\n\n```console\n$ uv add python-multipart\n```\n\nFastAPI reads form data from the request body instead of parsing it as JSON. HTML forms normally encode their data as `application/x-www-form-urlencoded`, and FastAPI handles this encoding for you [4].\n\nForms that include files use `multipart/form-data` instead. If you use `File`, FastAPI gets the files from the correct part of the body [2].\n\nYou can declare multiple `Form` parameters in a path operation. However, you can't also declare `Body` fields that expect JSON, because the request body is form-encoded rather than `application/json`. This is part of the HTTP protocol, not a FastAPI limitation [5].",
+      "claims": [
+        {
+          "claim": "To receive form fields instead of JSON, you use `Form`.",
+          "supported": true
+        },
+        {
+          "claim": "To use forms, you must first install `python-multipart`.",
+          "supported": true
+        },
+        {
+          "claim": "The command to install python-multipart is `uv add python-multipart`.",
+          "supported": true
+        },
+        {
+          "claim": "FastAPI reads form data from the request body instead of parsing it as JSON.",
+          "supported": true
+        },
+        {
+          "claim": "HTML forms normally encode their data as `application/x-www-form-urlencoded`.",
+          "supported": true
+        },
+        {
+          "claim": "FastAPI handles the form encoding for you.",
+          "supported": false
+        },
+        {
+          "claim": "Forms that include files are encoded as `multipart/form-data`.",
+          "supported": true
+        },
+        {
+          "claim": "If you use `File`, FastAPI gets the files from the correct part of the body.",
+          "supported": true
+        },
+        {
+          "claim": "You can declare multiple `Form` parameters in a path operation.",
+          "supported": true
+        },
+        {
+          "claim": "You can't also declare `Body` fields that expect JSON in the same path operation.",
+          "supported": true
+        },
+        {
+          "claim": "The request body is form-encoded rather than `application/json` when form parameters are used.",
+          "supported": true
+        },
+        {
+          "claim": "The restriction on combining form and JSON body fields is part of the HTTP protocol, not a FastAPI limitation.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.9166666666666666
+    },
+    {
+      "id": 12,
+      "question": "How can users upload a file to my API?",
+      "answer": "You can accept uploaded files in a *path operation function* by declaring parameters with `File` or `UploadFile`.\n\n1. **Install `python-multipart`.** Uploaded files are sent as form data, so FastAPI needs this package. Add it with `uv add python-multipart` [1].\n\n2. **Declare the file parameter.** Import `File` and `UploadFile` from `fastapi` [4]. You can use either:\n   - `Annotated[bytes, File()]`, which gives you the raw file contents as `bytes` [4].\n   - `UploadFile`, which gives you a file object with attributes such as `filename`, `content_type`, `size`, and methods such as `read` and `close` [3][4].\n\n   ```python\n   from typing import Annotated\n\n   from fastapi import FastAPI, File, UploadFile\n\n   app = FastAPI()\n\n\n   @app.post(\"/files/\")\n   async def create_file(file: Annotated[bytes, File()]):\n       return {\"file_size\": len(file)}\n\n\n   @app.post(\"/uploadfile/\")\n   async def create_upload_file(file: UploadFile):\n       return {\"filename\": file.filename}\n   ```\n   [4]\n\n3. **Combine with other form fields if needed.** You can declare `File` and `Form` parameters together in the same endpoint to receive files and other form values in one request [5].\n\nClients send the file as form data in the request. The excerpts don't include a client-side example (such as a curl command or HTML form), so I can't show that from them.",
+      "claims": [
+        {
+          "claim": "You can accept uploaded files in a path operation function by declaring parameters with File or UploadFile.",
+          "supported": true
+        },
+        {
+          "claim": "Uploaded files are sent as form data, so FastAPI needs the python-multipart package.",
+          "supported": true
+        },
+        {
+          "claim": "python-multipart can be added to a project with `uv add python-multipart`.",
+          "supported": true
+        },
+        {
+          "claim": "File and UploadFile are imported from fastapi.",
+          "supported": true
+        },
+        {
+          "claim": "Annotated[bytes, File()] gives the raw file contents as bytes.",
+          "supported": false
+        },
+        {
+          "claim": "UploadFile provides a file object with attributes such as filename, content_type, and size.",
+          "supported": true
+        },
+        {
+          "claim": "UploadFile provides methods such as read and close.",
+          "supported": true
+        },
+        {
+          "claim": "File and Form parameters can be declared together in the same endpoint to receive files and other form values in one request.",
+          "supported": true
+        },
+        {
+          "claim": "Clients send the uploaded file as form data in the request.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.8888888888888888
+    },
+    {
+      "id": 13,
+      "question": "How can a client upload several files in one request?",
+      "answer": "A client can upload several files in one request by sending them all under the same form field using form data. On the server, you declare a list of `bytes` or `UploadFile` for that field [1].\n\nThe docs show two endpoints for this:\n\n- `files: Annotated[list[bytes], File()]` receives the raw contents as a list of `bytes` [5].\n- `files: list[UploadFile]` receives a list of `UploadFile` objects, and the example returns their filenames [5].\n\nThe example HTML form uses `<input name=\"files\" type=\"file\" multiple>`, with `enctype=\"multipart/form-data\"` and `method=\"post\"`, so the browser can select and send multiple files [2][4]. The excerpts don't show a client-side example beyond this HTML form.",
+      "claims": [
+        {
+          "claim": "A client can upload several files in one request by sending them all under the same form field using form data.",
+          "supported": true
+        },
+        {
+          "claim": "On the server, you declare a list of bytes or UploadFile for that field.",
+          "supported": true
+        },
+        {
+          "claim": "The docs show two endpoints for uploading multiple files.",
+          "supported": true
+        },
+        {
+          "claim": "The files: Annotated[list[bytes], File()] parameter receives the raw contents as a list of bytes.",
+          "supported": true
+        },
+        {
+          "claim": "The files: list[UploadFile] parameter receives a list of UploadFile objects.",
+          "supported": true
+        },
+        {
+          "claim": "The example endpoint for list[UploadFile] returns the filenames of the uploaded files.",
+          "supported": true
+        },
+        {
+          "claim": "The example HTML form uses an input with name=\"files\", type=\"file\", and the multiple attribute.",
+          "supported": true
+        },
+        {
+          "claim": "The example HTML form uses enctype=\"multipart/form-data\" and method=\"post\".",
+          "supported": true
+        },
+        {
+          "claim": "The multiple attribute lets the browser select and send multiple files.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.8888888888888888
+    },
+    {
+      "id": 14,
+      "question": "How do I read the User-Agent sent by the browser?",
+      "answer": "You can read it with a `Header` parameter. Declare a parameter named `user_agent` with `Header()`:\n\n```python\nfrom typing import Annotated\n\nfrom fastapi import FastAPI, Header\n\napp = FastAPI()\n\n\n@app.get(\"/items/\")\nasync def read_items(user_agent: Annotated[str | None, Header()] = None):\n    return {\"User-Agent\": user_agent}\n```\n\n[3]\n\n`Header` converts underscores in the parameter name to hyphens, so `user_agent` is read from the `user-agent` header [1]. HTTP headers are case-insensitive, so you don't need to capitalize the name as `User_Agent` [1].",
+      "claims": [
+        {
+          "claim": "A User-Agent can be read with a Header parameter declared as user_agent with Header().",
+          "supported": true
+        },
+        {
+          "claim": "The example endpoint returns a dictionary with the key \"User-Agent\" mapped to the user_agent value.",
+          "supported": true
+        },
+        {
+          "claim": "Header converts underscores in parameter names to hyphens.",
+          "supported": true
+        },
+        {
+          "claim": "user_agent is read from the user-agent header.",
+          "supported": true
+        },
+        {
+          "claim": "HTTP headers are case-insensitive.",
+          "supported": true
+        },
+        {
+          "claim": "The parameter name does not need to be capitalized as User_Agent.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 15,
+      "question": "How do I read a cookie that the client sent?",
+      "answer": "The excerpts say you declare the cookie with `Cookie`, using the same pattern as `Query` and `Path` [2]. You must use `Cookie` for this, because otherwise FastAPI interprets the parameter as a query parameter [5].\n\nThe excerpts don't include the code example, so I can't show the exact syntax. For a working example, see the full cookie parameters tutorial.\n\nWhen testing, the interactive docs at `/docs` won't send cookies. The docs UI uses JavaScript, which can't easily set cookies, so filling in a cookie value and clicking \"Execute\" will show an error as if no value was given [4][5].",
+      "claims": [
+        {
+          "claim": "You declare a cookie parameter using `Cookie`.",
+          "supported": true
+        },
+        {
+          "claim": "Declaring cookies with `Cookie` follows the same common pattern as `Query` and `Path`.",
+          "supported": true
+        },
+        {
+          "claim": "`Cookie` must be used for cookie parameters because otherwise FastAPI interprets the parameters as query parameters.",
+          "supported": true
+        },
+        {
+          "claim": "The interactive docs UI at `/docs` does not send cookies when testing.",
+          "supported": true
+        },
+        {
+          "claim": "The docs UI works with JavaScript, which browsers do not easily allow to access cookies.",
+          "supported": true
+        },
+        {
+          "claim": "Filling in a cookie value and clicking \"Execute\" in the docs UI shows an error as if no value had been written.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 16,
+      "question": "How do I make sure the user's password is never included in what my endpoint returns?",
+      "answer": "The excerpts don't show the complete answer. They identify the problem but cut off before the solution.\n\n[1] warns that reusing the same model for other *path operations* could send users' passwords to every client, and says never to send a plain password in a response. It doesn't show how to prevent that.\n\n[5] explains that passwords should be stored hashed, not in plaintext, and introduces a `UserInDB` Pydantic model for the user data, but its section on why password hashing matters is empty in the excerpt.\n\nThe excerpts don't show the mechanism that keeps the password out of your responses, so I can't give you the exact code from them. The docs section on response models, which these excerpts point to, would be the place to look.",
+      "claims": [
+        {
+          "claim": "Reusing the same model for another path operation could send users' passwords to every client.",
+          "supported": true
+        },
+        {
+          "claim": "Plain passwords should never be sent in a response.",
+          "supported": true
+        },
+        {
+          "claim": "Passwords should be stored hashed, not as plaintext.",
+          "supported": true
+        },
+        {
+          "claim": "The user data is placed into a Pydantic UserInDB model.",
+          "supported": true
+        },
+        {
+          "claim": "The docs section on response models is the place to look for how to keep passwords out of responses.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.8
+    },
+    {
+      "id": 17,
+      "question": "How do I make my create endpoint respond with 201 instead of 200?",
+      "answer": "The excerpts don't include the code for this, so I can't give you the exact syntax from them.\n\nThey do establish a few points:\n\n- `201` means \"Created\" and is commonly used after creating a new record in the database [1].\n- The status code you declare on the path operation is its default. The advanced guide covers returning a different status code than that default [3].\n- For cases where the status code depends on the data, such as returning `200` normally but `201` when a record is newly created, the approach is to use a `Response` parameter. This still lets you filter and convert the returned data with a `response_model` [5][4].\n\nThe excerpts don't show the parameter name, the code that sets the status, or how to declare `201` as the default. The relevant pages are the Response Status Code tutorial and the \"Change Status Code\" section of the advanced guide, which should contain the examples.",
+      "claims": [
+        {
+          "claim": "201 means \"Created\".",
+          "supported": true
+        },
+        {
+          "claim": "201 is commonly used after creating a new record in the database.",
+          "supported": true
+        },
+        {
+          "claim": "The status code declared on the path operation is its default.",
+          "supported": true
+        },
+        {
+          "claim": "The advanced guide covers returning a different status code than the default declared on the path operation.",
+          "supported": true
+        },
+        {
+          "claim": "For cases where the status code depends on the data, such as returning 200 normally but 201 when a record is newly created, the approach is to use a Response parameter.",
+          "supported": true
+        },
+        {
+          "claim": "Using a Response parameter still lets you filter and convert the returned data with a response_model.",
+          "supported": true
+        },
+        {
+          "claim": "The relevant pages are the Response Status Code tutorial and the \"Change Status Code\" section of the advanced guide.",
+          "supported": true
+        },
+        {
+          "claim": "The Response Status Code tutorial and the \"Change Status Code\" section of the advanced guide should contain the examples.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.875
+    },
+    {
+      "id": 18,
+      "question": "How do I reuse the same setup logic, like getting a DB session, across many endpoints?",
+      "answer": "You define the setup logic once as a dependency function, wrap it in an `Annotated` alias, and then use that alias as a parameter in every endpoint that needs it.\n\nIn the SQL databases tutorial, `get_session` is a dependency that uses `yield` to provide a new `Session` for each request, which keeps to a single session per request [1][5]:\n\n```python\ndef get_session():\n    with Session(engine) as session:\n        yield session\n\n\nSessionDep = Annotated[Session, Depends(get_session)]\n```\n\nEach path operation then just declares `session: SessionDep`, and FastAPI injects the session automatically [1][5]:\n\n```python\n@app.post(\"/heroes/\")\ndef create_hero(hero: Hero, session: SessionDep) -> Hero:\n    session.add(hero)\n    session.commit()\n    session.refresh(hero)\n    return hero\n\n\n@app.get(\"/heroes/\")\ndef read_heroes(session: SessionDep, offset: int = 0, limit: Annotated[int, Query(le=100)] = 100) -> list[Hero]:\n    ...\n```\n\nThe `Annotated` alias keeps the dependency declaration in one place, so the endpoints stay short and changing the setup means editing only `get_session` or `SessionDep` [1].\n\nIf you also want to cap how many requests use the dependency at once, you can add `max_concurrency` to the same `Depends()` object. Routes that reuse the `SessionDep` alias share that limit. Creating a separate `Depends(get_session, max_concurrency=5)` for each route gives each route its own limit [2][4].",
+      "claims": [
+        {
+          "claim": "You define the setup logic once as a dependency function, wrap it in an Annotated alias, and use that alias as a parameter in endpoints that need it.",
+          "supported": true
+        },
+        {
+          "claim": "In the SQL databases tutorial, get_session is a dependency that uses yield to provide a new Session for each request.",
+          "supported": true
+        },
+        {
+          "claim": "The get_session dependency keeps to a single session per request.",
+          "supported": true
+        },
+        {
+          "claim": "Each path operation declares a session parameter typed as SessionDep.",
+          "supported": true
+        },
+        {
+          "claim": "FastAPI injects the session into path operations automatically.",
+          "supported": false
+        },
+        {
+          "claim": "The Annotated alias keeps the dependency declaration in one place, which simplifies the rest of the code.",
+          "supported": true
+        },
+        {
+          "claim": "Changing the setup means editing only get_session or SessionDep.",
+          "supported": false
+        },
+        {
+          "claim": "You can add max_concurrency to the same Depends() object to cap how many requests use the dependency at once.",
+          "supported": true
+        },
+        {
+          "claim": "Routes that reuse the SessionDep alias share the max_concurrency limit.",
+          "supported": true
+        },
+        {
+          "claim": "Creating a separate Depends(get_session, max_concurrency=5) for each route gives each route its own limit.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.8
+    },
+    {
+      "id": 19,
+      "question": "How do I close the database connection after each request is done?",
+      "answer": "Use a dependency with `yield`. The code before `yield` runs before the request is handled, and the code after `yield` runs after the response is sent. Put the cleanup, such as closing the session, in a `finally` block:\n\n```python\nasync def get_db():\n    db = DBSession()\n    try:\n        yield db\n    finally:\n        db.close()\n```\n\nThe yielded value is injected into *path operations* and other dependencies, and the code following `yield` runs after the response [4].\n\nKeep the database engine itself shared. The engine holds the connections to the database, and you would normally have one engine object for all your code [3]. Per request, you create and close a session, not the engine.\n\nFor the app-wide startup and shutdown logic, FastAPI has lifespan events, which run once for the whole application [5]. Those are not the right tool for per-request cleanup.",
+      "claims": [
+        {
+          "claim": "A dependency with `yield` can be used to close a database session after each request finishes.",
+          "supported": true
+        },
+        {
+          "claim": "The code before `yield` runs before the response is created.",
+          "supported": true
+        },
+        {
+          "claim": "The code after `yield` runs after the response.",
+          "supported": true
+        },
+        {
+          "claim": "The cleanup code can be placed in a `finally` block after `yield`.",
+          "supported": true
+        },
+        {
+          "claim": "The yielded value is injected into path operations and other dependencies.",
+          "supported": true
+        },
+        {
+          "claim": "An example `get_db` dependency creates a `DBSession`, yields it inside a `try`, and calls `db.close()` in a `finally` block.",
+          "supported": true
+        },
+        {
+          "claim": "A SQLModel engine holds the connections to the database.",
+          "supported": true
+        },
+        {
+          "claim": "You would normally have one single engine object for all your code to connect to the same database.",
+          "supported": true
+        },
+        {
+          "claim": "Per request, you create and close a session, not the engine.",
+          "supported": false
+        },
+        {
+          "claim": "FastAPI has lifespan events for app-wide startup and shutdown logic.",
+          "supported": true
+        },
+        {
+          "claim": "Lifespan event logic runs once for the whole application, before it starts receiving requests and after it finishes handling them.",
+          "supported": true
+        },
+        {
+          "claim": "Lifespan events are not the right tool for per-request cleanup.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.8333333333333334
+    },
+    {
+      "id": 20,
+      "question": "How do I run an API key check on every endpoint without repeating it everywhere?",
+      "answer": "The excerpts don't show how to apply an API key check to every endpoint, so I can't give you a verified answer from them.\n\nThey do include a few related pieces:\n\n- **API key security classes:** The security reference lists `APIKeyCookie`, `APIKeyHeader`, and `APIKeyQuery` [1]. These define where the key is read from, but the excerpt doesn't show how to attach them app-wide.\n- **Custom route classes:** The \"custom request and route\" guide says overriding the `Request` and `APIRoute` classes may be an alternative to middleware, for example to read or manipulate the request body before your application processes it [4]. This suggests a custom route class could be one way to run logic on every request, but the excerpt doesn't show a key check implemented that way.\n\nThe other excerpts cover unrelated topics: custom operation IDs [2], multiple body parameters [3], and additional responses [5].\n\nFor the exact mechanism, check the security and dependencies documentation, which isn't among these excerpts.",
+      "claims": [
+        {
+          "claim": "The security reference lists APIKeyCookie, APIKeyHeader, and APIKeyQuery.",
+          "supported": true
+        },
+        {
+          "claim": "The API key security classes define where the key is read from.",
+          "supported": false
+        },
+        {
+          "claim": "The custom request and route guide says overriding the Request and APIRoute classes may be an alternative to middleware.",
+          "supported": true
+        },
+        {
+          "claim": "Overriding the Request and APIRoute classes can be used to read or manipulate the request body before the application processes it.",
+          "supported": true
+        },
+        {
+          "claim": "A custom route class could be a way to run logic on every request.",
+          "supported": false
+        },
+        {
+          "claim": "The excerpts cover custom operation IDs.",
+          "supported": true
+        },
+        {
+          "claim": "The excerpts cover multiple body parameters.",
+          "supported": true
+        },
+        {
+          "claim": "The excerpts cover additional responses.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.75
+    },
+    {
+      "id": 21,
+      "question": "My main.py is getting huge. How do I split my endpoints into several files?",
+      "answer": "The excerpts show the layout you should use, but not the code that wires the pieces together.\n\nPut each group of related endpoints in its own module inside a package. The docs use a structure like this:\n\n```\napp\n\u251c\u2500\u2500 __init__.py      # makes \"app\" a Python package\n\u251c\u2500\u2500 main.py          # the main module that creates the FastAPI app\n\u251c\u2500\u2500 dependencies.py\n\u2514\u2500\u2500 routers          # a subpackage for endpoint modules\n    \u251c\u2500\u2500 __init__.py\n    \u251c\u2500\u2500 items.py     # e.g. import app.routers.items\n    \u2514\u2500\u2500 users.py     # e.g. import app.routers.users\n```\n[1][3]\n\nThe `__init__.py` files are what make each directory importable, so `app/main.py` can import from the submodules, for example `from app.routers import items`. [1]\n\n`app/main.py` then stays small. It imports the class `FastAPI` and ties everything together, while most of the logic lives in the specific modules. [2]\n\nThe excerpts don't show how the routes in `items.py` or `users.py` get attached to the app. The usual approach is to define an `APIRouter` in each module and include it in `main.py` with `app.include_router(...)`, but these excerpts don't confirm that, so check the \"Bigger Applications\" page for the exact code.",
+      "claims": [
+        {
+          "claim": "The excerpts show a file layout for splitting an application into modules.",
+          "supported": true
+        },
+        {
+          "claim": "Each group of related endpoints should be put in its own module inside a package.",
+          "supported": false
+        },
+        {
+          "claim": "The app directory is a Python package because its __init__.py makes it one.",
+          "supported": true
+        },
+        {
+          "claim": "main.py is the main module where the FastAPI class is imported and used.",
+          "supported": true
+        },
+        {
+          "claim": "The routers directory is a Python subpackage intended for endpoint modules.",
+          "supported": false
+        },
+        {
+          "claim": "items.py is a submodule that can be imported as app.routers.items.",
+          "supported": true
+        },
+        {
+          "claim": "users.py is a submodule that can be imported as app.routers.users.",
+          "supported": true
+        },
+        {
+          "claim": "The __init__.py files allow importing code from one file into another.",
+          "supported": true
+        },
+        {
+          "claim": "app/main.py can import from the submodules, for example with \"from app.routers import items\".",
+          "supported": true
+        },
+        {
+          "claim": "app/main.py stays small because most of the logic lives in its own specific modules.",
+          "supported": true
+        },
+        {
+          "claim": "app/main.py ties everything together.",
+          "supported": true
+        },
+        {
+          "claim": "The usual approach is to define an APIRouter in each endpoint module.",
+          "supported": false
+        },
+        {
+          "claim": "Routes are attached to the app by calling app.include_router(...) in main.py.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.6923076923076923
+    },
+    {
+      "id": 22,
+      "question": "How do I measure how long every request takes to process?",
+      "answer": "You can measure each request's processing time with an HTTP middleware. The middleware runs for every request: it records a start time before the *path operation* receives the request, calls the request, and then computes the elapsed time after the response is generated [1]:\n\n```python\nimport time\n\nfrom fastapi import FastAPI, Request\n\napp = FastAPI()\n\n\n@app.middleware(\"http\")\nasync def add_process_time_header(request: Request, call_next):\n    start_time = time.perf_counter()\n    response = await call_next(request)\n    process_time = time.perf_counter() - start_time\n    response.headers[\"X-Process-Time\"] = str(process_time)\n    return response\n```\n\nThis adds an `X-Process-Time` header to each response containing the time in seconds [1][3]. The docs use `time.perf_counter()` rather than `time.time()` because it can be more precise for this kind of measurement [2].\n\nIf you want a full monitoring setup instead of a per-response header, the OpenTelemetry guide shows how to collect response duration metrics along with request traces [4].",
+      "claims": [
+        {
+          "claim": "You can measure each request's processing time with an HTTP middleware.",
+          "supported": true
+        },
+        {
+          "claim": "The middleware runs for every request.",
+          "supported": false
+        },
+        {
+          "claim": "The middleware records a start time before the path operation receives the request.",
+          "supported": true
+        },
+        {
+          "claim": "The middleware calls the request handler via call_next after recording the start time.",
+          "supported": true
+        },
+        {
+          "claim": "The middleware computes the elapsed time after the response is generated.",
+          "supported": true
+        },
+        {
+          "claim": "The middleware adds an X-Process-Time header to each response containing the time in seconds.",
+          "supported": true
+        },
+        {
+          "claim": "The docs use time.perf_counter() rather than time.time() because it can be more precise for this kind of measurement.",
+          "supported": true
+        },
+        {
+          "claim": "The OpenTelemetry guide shows how to collect response duration metrics along with request traces.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.875
+    },
+    {
+      "id": 23,
+      "question": "How do I serve images and CSS files from a folder?",
+      "answer": "You can serve files from a folder with `StaticFiles`. Create a directory for the files, such as `static/` next to your `app/` package [3]. Then import `StaticFiles` and \"mount\" a `StaticFiles()` instance at a specific path [1]. Images, CSS, and other static files in that directory are then served automatically [2].\n\nThe excerpts don't include the exact mounting code, such as the path, directory argument, or `name` parameter, so check the static files tutorial for the full example.\n\nIf you're hosting a frontend rather than plain static files, the docs recommend `app.frontend()` instead. It uses `StaticFiles` underneath and also handles client-side routing [2].",
+      "claims": [
+        {
+          "claim": "You can serve files from a folder with `StaticFiles`.",
+          "supported": true
+        },
+        {
+          "claim": "A directory for the files can be created, such as `static/`, next to the `app/` package.",
+          "supported": true
+        },
+        {
+          "claim": "You import `StaticFiles` to serve static files.",
+          "supported": true
+        },
+        {
+          "claim": "You \"mount\" a `StaticFiles()` instance at a specific path.",
+          "supported": true
+        },
+        {
+          "claim": "Images, CSS, and other static files in that directory are served automatically.",
+          "supported": false
+        },
+        {
+          "claim": "For hosting a frontend, the docs recommend `app.frontend()` instead of plain static files.",
+          "supported": true
+        },
+        {
+          "claim": "`app.frontend()` uses `StaticFiles` underneath.",
+          "supported": true
+        },
+        {
+          "claim": "`app.frontend()` handles client-side routing.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.875
+    },
+    {
+      "id": 24,
+      "question": "How do I write automated tests for my endpoints?",
+      "answer": "FastAPI's testing guide uses **pytest** together with a `TestClient`, but these excerpts don't include the actual test code, so I can't show you the exact steps.\n\nWhat the excerpts do say:\n\n- **Tools:** FastAPI testing is based on Starlette's test client, which is built on HTTPX and designed like Requests, and you can use pytest directly with FastAPI [2].\n- **TestClient import:** Use `from fastapi.testclient import TestClient`. It is the same `starlette.testclient` class, re-exported for convenience, so importing from Starlette also works [5].\n- **Sending Pydantic data:** If a test needs to send a Pydantic model's data to the app, convert it with `jsonable_encoder`, described in the JSON Compatible Encoder docs [3].\n- **Async code in tests:** If your tests need to call `async` functions besides sending requests (for example, async database calls), see the Async Tests page in the advanced tutorial [5].\n\nFor the complete example of writing a test function and checking an endpoint's response, see the full `docs/en/docs/tutorial/testing.md` page. The excerpts I have don't include it.",
+      "claims": [
+        {
+          "claim": "FastAPI's testing guide uses pytest together with a TestClient.",
+          "supported": true
+        },
+        {
+          "claim": "FastAPI testing is based on Starlette's test client.",
+          "supported": true
+        },
+        {
+          "claim": "Starlette's test client is based on HTTPX.",
+          "supported": true
+        },
+        {
+          "claim": "HTTPX is designed based on Requests.",
+          "supported": true
+        },
+        {
+          "claim": "pytest can be used directly with FastAPI.",
+          "supported": true
+        },
+        {
+          "claim": "TestClient can be imported with `from fastapi.testclient import TestClient`.",
+          "supported": true
+        },
+        {
+          "claim": "fastapi.testclient provides the same TestClient as starlette.testclient, as a convenience for developers.",
+          "supported": true
+        },
+        {
+          "claim": "Importing TestClient from starlette.testclient also works.",
+          "supported": true
+        },
+        {
+          "claim": "To send a Pydantic model's data to the application in tests, you can use jsonable_encoder.",
+          "supported": true
+        },
+        {
+          "claim": "jsonable_encoder is described in the JSON Compatible Encoder documentation.",
+          "supported": true
+        },
+        {
+          "claim": "If tests need to call async functions such as asynchronous database functions, the Async Tests page in the advanced tutorial covers this.",
+          "supported": true
+        },
+        {
+          "claim": "The testing.md page contains a complete example of writing a test function and checking an endpoint's response.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.9166666666666666
+    },
+    {
+      "id": 25,
+      "question": "In my tests, how do I swap the real database dependency for a fake one?",
+      "answer": "Use the app's `dependency_overrides` dictionary. Put your original database dependency function as the key and a fake dependency function as the value. FastAPI then calls the fake instead of the original [3].\n\n```python\nfrom fastapi import Depends, FastAPI\n\napp = FastAPI()\n\ndef get_db():\n    ...  # real database session\n\ndef get_fake_db():\n    ...  # fake or test database session\n\n@app.get(\"/items/\")\ndef read_items(db=Depends(get_db)):\n    ...\n\n# In your test setup:\napp.dependency_overrides[get_db] = get_fake_db\n```\n\nThe override replaces the original dependency entirely, so the original and its sub-dependencies don't run during the test. The fake only needs to return a value that works wherever the original's value was used [1].\n\nThe excerpts don't cover database-specific details such as session lifecycle or cleanup. If you need to reset the override after a test, clear the entry from `app.dependency_overrides` (for example, with `app.dependency_overrides.clear()`), but this isn't shown in the provided excerpts.",
+      "claims": [
+        {
+          "claim": "The app's `dependency_overrides` is used to override dependencies for testing.",
+          "supported": true
+        },
+        {
+          "claim": "`app.dependency_overrides` is a simple dict.",
+          "supported": true
+        },
+        {
+          "claim": "To override a dependency, the original dependency function is put as the key in `dependency_overrides`.",
+          "supported": true
+        },
+        {
+          "claim": "To override a dependency, the override function is put as the value in `dependency_overrides`.",
+          "supported": true
+        },
+        {
+          "claim": "FastAPI calls the override instead of the original dependency.",
+          "supported": true
+        },
+        {
+          "claim": "Setting `app.dependency_overrides[get_db] = get_fake_db` replaces the original dependency with the fake one.",
+          "supported": true
+        },
+        {
+          "claim": "The override replaces the original dependency entirely, so the original and its sub-dependencies don't run during the test.",
+          "supported": true
+        },
+        {
+          "claim": "The fake dependency needs to provide a value that can be used where the original dependency's value was used.",
+          "supported": true
+        },
+        {
+          "claim": "The example endpoint `read_items` uses `Depends(get_db)`.",
+          "supported": false
+        },
+        {
+          "claim": "Clearing the override entry with `app.dependency_overrides.clear()` resets the override after a test.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.8
+    },
+    {
+      "id": 26,
+      "question": "How do I build a login where users send a username and password and get a token back?",
+      "answer": "The excerpts describe the flow, but they don't include the code to implement it.\n\nThe flow works like this: the user types a `username` and `password` into the frontend, and the frontend sends them to a specific URL in your API, declared with `tokenUrl=\"token\"`. The API checks the credentials and responds with a token, which is a string the API can later use to verify that user [1]. The frontend stores that token temporarily [1].\n\nThe tutorial section you'd be following is meant to add the missing login parts to the previous chapter, and it says to use utilities that **FastAPI** provides for this [4][5]. However, the excerpts don't show those utilities, the login path operation, the credential check, or how the token is generated. For those details, you'd need the full `simple-oauth2.md` chapter, which these excerpts only reference.",
+      "claims": [
+        {
+          "claim": "The user types a username and password into the frontend and hits Enter.",
+          "supported": true
+        },
+        {
+          "claim": "The frontend sends the username and password to a specific URL in the API, declared with tokenUrl=\"token\".",
+          "supported": true
+        },
+        {
+          "claim": "The API checks the username and password and responds with a token.",
+          "supported": true
+        },
+        {
+          "claim": "A token is a string the API can later use to verify that user.",
+          "supported": true
+        },
+        {
+          "claim": "The frontend stores the token temporarily.",
+          "supported": true
+        },
+        {
+          "claim": "The tutorial section adds the missing login parts to the previous chapter.",
+          "supported": true
+        },
+        {
+          "claim": "The tutorial says to use utilities provided by FastAPI to handle this.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 27,
+      "question": "How should I store user passwords safely?",
+      "answer": "You should store only a hash of each password, never the plaintext. If your database is stolen, the thief gets only the hashes, not the users' actual passwords. This also keeps attackers from reusing those passwords in other systems, since many users reuse the same password across services [2].\n\nThe code in the excerpts shows the pattern: the plaintext `password` arrives in `UserIn`, and the model that gets saved, `UserInDB`, holds only a `hashed_password` [4][5]. However, the `fake_password_hasher` in the example just prepends a string (`\"supersecret\" + raw_password`) and provides no real security. The docs explicitly say it is only there to demonstrate the data flow [1][5].\n\nThe excerpts don't name a real hashing algorithm or library, so I can't tell you which one to use or how to configure it. Use a well-established password hashing library rather than a homemade function like the example.",
+      "claims": [
+        {
+          "claim": "You should store only a hash of each password, never the plaintext.",
+          "supported": true
+        },
+        {
+          "claim": "If the database is stolen, the thief gets only the password hashes, not the users' actual passwords.",
+          "supported": true
+        },
+        {
+          "claim": "Storing hashes keeps attackers from reusing stolen passwords in other systems.",
+          "supported": true
+        },
+        {
+          "claim": "Many users reuse the same password across multiple systems.",
+          "supported": true
+        },
+        {
+          "claim": "In the example, the plaintext password arrives in the UserIn model.",
+          "supported": true
+        },
+        {
+          "claim": "The UserInDB model holds a hashed_password field rather than a plaintext password.",
+          "supported": true
+        },
+        {
+          "claim": "The fake_password_hasher in the example prepends the string \"supersecret\" to the raw password.",
+          "supported": true
+        },
+        {
+          "claim": "The fake_password_hasher provides no real security.",
+          "supported": true
+        },
+        {
+          "claim": "The docs say the fake password hasher and save function are only there to demonstrate a possible data flow.",
+          "supported": true
+        },
+        {
+          "claim": "A well-established password hashing library should be used instead of a homemade function like the example.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.9
+    },
+    {
+      "id": 28,
+      "question": "How do I create and check JWT tokens?",
+      "answer": "The excerpts describe the overall process, but they don't include the actual code for creating or verifying a token.\n\n**Creating a token**\n\n1. Install `PyJWT`, the library used to generate and verify JWTs in Python. For digital signature algorithms like RSA or ECDSA, install `pyjwt[crypto]` instead [2].\n2. Generate a random secret key with `openssl rand -hex 32` and store it in a `SECRET_KEY` variable [4].\n3. Set `ALGORITHM` to `\"HS256\"` [4].\n4. Create a variable for the token's expiration time [4]. The excerpts give the example of a token that lasts about one week [3].\n5. Create a `timedelta` with the token's expiration time, then create the real JWT access token and return it [5].\n\n**Checking a token**\n\nThe excerpts explain the principle: a JWT is not encrypted, so its contents can be read by anyone, but it is signed. When you receive a token you issued, you can verify that you were the one who issued it. If someone modifies the token, for example to extend its expiration, the signatures won't match, and you can detect that [1][3]. Once a token expires, the user is no longer authorized and must sign in again to get a new one [3].\n\nThe excerpts don't show the specific PyJWT calls for encoding or decoding the token, or the code that performs signature and expiration checks. For those, see the full \"OAuth2 with Password (and hashing), Bearer with JWT tokens\" tutorial page in the FastAPI docs.",
+      "claims": [
+        {
+          "claim": "Install PyJWT to generate and verify JWT tokens in Python.",
+          "supported": true
+        },
+        {
+          "claim": "For digital signature algorithms like RSA or ECDSA, install pyjwt[crypto] instead.",
+          "supported": true
+        },
+        {
+          "claim": "A random secret key can be generated with the command `openssl rand -hex 32`.",
+          "supported": true
+        },
+        {
+          "claim": "The generated secret key is stored in a SECRET_KEY variable.",
+          "supported": true
+        },
+        {
+          "claim": "The ALGORITHM variable is set to \"HS256\".",
+          "supported": true
+        },
+        {
+          "claim": "A variable is created for the token's expiration time.",
+          "supported": true
+        },
+        {
+          "claim": "The excerpts give the example of a token that lasts about one week.",
+          "supported": true
+        },
+        {
+          "claim": "A timedelta is created with the token's expiration time.",
+          "supported": true
+        },
+        {
+          "claim": "The real JWT access token is created and returned.",
+          "supported": true
+        },
+        {
+          "claim": "A JWT is not encrypted, so anyone could recover the information from its contents.",
+          "supported": true
+        },
+        {
+          "claim": "A JWT is signed, so when you receive a token you issued, you can verify that you issued it.",
+          "supported": true
+        },
+        {
+          "claim": "If a user or third party modifies a token to change its expiration, the signatures would not match and this can be detected.",
+          "supported": true
+        },
+        {
+          "claim": "After the token expires, the user is not authorized and must sign in again to get a new token.",
+          "supported": true
+        },
+        {
+          "claim": "The full tutorial page titled \"OAuth2 with Password (and hashing), Bearer with JWT tokens\" contains the code for encoding, decoding, and verifying tokens.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.9285714285714286
+    },
+    {
+      "id": 29,
+      "question": "Inside an endpoint, how do I get the user who is currently logged in?",
+      "answer": "You get the current user by declaring a parameter in your *path operation function* that depends on a `get_current_user` dependency:\n\n```python\n@app.get(\"/users/me\")\nasync def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):\n    return current_user\n```\n\n[4][5]\n\n`get_current_user` takes the token and returns the user. In the tutorial it uses a fake utility function, `fake_decode_token`, which takes a token as a `str` and returns a Pydantic `User` model. [3][4] In a real app, this function would decode and verify the token.\n\nThe excerpts don't show the full definition of `get_current_user` or how the token is extracted from the request. They also don't include the login *path operation* that lets a user send their `username` and `password`. The tutorial says that comes next. [1]",
+      "claims": [
+        {
+          "claim": "You get the current user by declaring a parameter in your path operation function that depends on a get_current_user dependency.",
+          "supported": true
+        },
+        {
+          "claim": "The endpoint is defined with @app.get(\"/users/me\") and returns current_user.",
+          "supported": true
+        },
+        {
+          "claim": "get_current_user takes the token and returns the user.",
+          "supported": true
+        },
+        {
+          "claim": "In the tutorial, get_current_user uses a fake utility function, fake_decode_token.",
+          "supported": true
+        },
+        {
+          "claim": "fake_decode_token takes a token as a str and returns a Pydantic User model.",
+          "supported": true
+        },
+        {
+          "claim": "In a real app, get_current_user would decode and verify the token.",
+          "supported": false
+        },
+        {
+          "claim": "The tutorial says the login path operation that lets a user send their username and password comes next.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.8571428571428571
+    },
+    {
+      "id": 30,
+      "question": "How do I connect my app to a SQL database?",
+      "answer": "The excerpts give the overall approach but not the full code, so I can only partly answer.\n\n1. **Use SQLModel.** FastAPI doesn't require a SQL database, and the tutorial uses [SQLModel](https://sqlmodel.tiangolo.com/), which is built on SQLAlchemy and Pydantic [5].\n\n2. **Create one engine for the whole app.** The SQLModel `engine` (a SQLAlchemy engine underneath) holds the connections to the database. You should have a single engine object that all your code uses to connect to the same database [1].\n\n3. **Define your models.** The tutorial starts by importing `SQLModel` and creating a database model [2]. It begins with a single SQLModel model and adds multiple models later [4].\n\n4. **Create the tables at startup.** The database tables are created when the application starts [3].\n\nThe excerpts don't show how to create the engine (for example, the `create_engine` call or the database URL), so I don't know the exact connection setup from these excerpts alone.",
+      "claims": [
+        {
+          "claim": "FastAPI doesn't require a SQL (relational) database.",
+          "supported": true
+        },
+        {
+          "claim": "The tutorial uses SQLModel to connect to a SQL database.",
+          "supported": true
+        },
+        {
+          "claim": "SQLModel is built on top of SQLAlchemy and Pydantic.",
+          "supported": true
+        },
+        {
+          "claim": "A SQLModel engine holds the connections to the database.",
+          "supported": true
+        },
+        {
+          "claim": "Underneath, a SQLModel engine is a SQLAlchemy engine.",
+          "supported": true
+        },
+        {
+          "claim": "You should have one single engine object that all your code uses to connect to the same database.",
+          "supported": true
+        },
+        {
+          "claim": "The tutorial starts by importing SQLModel and creating a database model.",
+          "supported": true
+        },
+        {
+          "claim": "The tutorial begins with a single SQLModel model and introduces multiple models later.",
+          "supported": true
+        },
+        {
+          "claim": "The database tables are created when the application starts.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 31,
+      "question": "How do I load a machine learning model once when the app starts and free it when it stops?",
+      "answer": "You load the model before the `yield` and unload it after the `yield` in a lifespan function. The code before `yield` runs at startup, before the application starts taking requests, and the code after `yield` runs at shutdown, after it finishes handling requests [1][2]. This is useful for shared resources like a loaded machine learning model, which you don't want to reload for every request [4][5].\n\nThe excerpts describe this pattern but don't include the full code, such as the exact function signature or how it is attached to the app, so I can't show that part from them.",
+      "claims": [
+        {
+          "claim": "You load the model before the `yield` and unload it after the `yield` in a lifespan function.",
+          "supported": false
+        },
+        {
+          "claim": "The code before `yield` runs at startup, before the application starts taking requests.",
+          "supported": true
+        },
+        {
+          "claim": "The code after `yield` runs at shutdown, after the application finishes handling requests.",
+          "supported": true
+        },
+        {
+          "claim": "This pattern is useful for shared resources, such as a loaded machine learning model, that you don't want to reload for every request.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.75
+    },
+    {
+      "id": 32,
+      "question": "How do I read configuration from environment variables or a .env file?",
+      "answer": "You can store settings as environment variables and read them in your application. For many settings, it's convenient to put them in a dotenv file, usually named `.env`, and have the application read it as if they were environment variables [1].\n\nA `.env` file looks like this:\n\n```bash\nADMIN_EMAIL=\"deadpool@example.com\"\nAPP_NAME=\"ChimichangApp\"\n```\n[5]\n\nTo load it, define the `env_file` config inside your Pydantic `Settings` class and set it to the name of your dotenv file [2]. The excerpts don't show the full `Settings` class or the exact config syntax, so check the settings guide for that code.",
+      "claims": [
+        {
+          "claim": "You can store settings as environment variables and read them in your application.",
+          "supported": true
+        },
+        {
+          "claim": "For many settings, it's convenient to put them in a dotenv file, usually named `.env`.",
+          "supported": true
+        },
+        {
+          "claim": "The application can read a dotenv file as if its contents were environment variables.",
+          "supported": true
+        },
+        {
+          "claim": "A `.env` file can contain lines such as ADMIN_EMAIL=\"deadpool@example.com\" and APP_NAME=\"ChimichangApp\".",
+          "supported": true
+        },
+        {
+          "claim": "To load a dotenv file, you define the `env_file` config inside your Pydantic `Settings` class.",
+          "supported": true
+        },
+        {
+          "claim": "The `env_file` config is set to the filename of the dotenv file you want to use.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 33,
+      "question": "How do I return an HTML page instead of JSON?",
+      "answer": "You can return an HTML page by using `HTMLResponse`, which is a subclass of `Response`. There are two ways to do it.\n\n**Option 1: Return an `HTMLResponse` directly from the path operation.** Create the response with your HTML string and return it:\n\n```python\nfrom fastapi import FastAPI\nfrom fastapi.responses import HTMLResponse\n\napp = FastAPI()\n\n\n@app.get(\"/items/\")\nasync def read_items():\n    html_content = \"\"\"\n    <html>\n        <head>\n            <title>Some HTML in here</title>\n        </head>\n        <body>\n            <h1>Look ma! HTML!</h1>\n        </body>\n    </html>\n    \"\"\"\n    return HTMLResponse(content=html_content, status_code=200)\n```\n\nThis works because you can override the response directly by returning it from your path operation [2].\n\n**Option 2: Set `response_class=HTMLResponse` on the path operation.** Your function can then return a `Response` built elsewhere, such as from a helper function:\n\n```python\n@app.get(\"/items/\", response_class=HTMLResponse)\nasync def read_items():\n    return generate_html_response()\n```\n\nHere, `generate_html_response()` builds and returns an `HTMLResponse` instead of a plain `str` [3].",
+      "claims": [
+        {
+          "claim": "You can return an HTML page by using `HTMLResponse`.",
+          "supported": true
+        },
+        {
+          "claim": "`HTMLResponse` is a subclass of `Response`.",
+          "supported": false
+        },
+        {
+          "claim": "There are two ways to return an HTML page with FastAPI.",
+          "supported": false
+        },
+        {
+          "claim": "Returning an `HTMLResponse` directly from the path operation works.",
+          "supported": true
+        },
+        {
+          "claim": "An `HTMLResponse` can be created with an HTML string as its content and returned from a path operation.",
+          "supported": true
+        },
+        {
+          "claim": "You can override the response directly in a path operation by returning it.",
+          "supported": true
+        },
+        {
+          "claim": "A path operation can be given `response_class=HTMLResponse`.",
+          "supported": true
+        },
+        {
+          "claim": "A path operation with `response_class=HTMLResponse` can return a `Response` built elsewhere, such as from a helper function.",
+          "supported": true
+        },
+        {
+          "claim": "The helper function `generate_html_response()` builds and returns an `HTMLResponse` instead of a plain `str`.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.7777777777777778
+    },
+    {
+      "id": 34,
+      "question": "How do I send a big response bit by bit instead of all at once?",
+      "answer": "To send a large response bit by bit, declare `response_class=StreamingResponse` in your *path operation function*, then use `yield` to send each chunk of data in turn [4]. This is meant for cases like large binary files, where each chunk is streamed as it's read, so the whole file never has to be loaded into memory at once [2].\n\nThe docs example opens a file-like object in a `with` block and yields each chunk from it:\n\n```python\nwith read_image() as image_file:\n    for chunk in image_file:\n        yield chunk\n```\n\n[5] The `with` block makes sure the file is closed after the generator function finishes, which is after the response has been sent.\n\nYou can stream `bytes` this way as well as strings [1].",
+      "claims": [
+        {
+          "claim": "To send a large response bit by bit, you declare response_class=StreamingResponse in the path operation function.",
+          "supported": true
+        },
+        {
+          "claim": "Using yield sends each chunk of data in turn.",
+          "supported": true
+        },
+        {
+          "claim": "Streaming is meant for cases like large binary files, where each chunk is streamed as it is read.",
+          "supported": true
+        },
+        {
+          "claim": "Streaming large files this way means the whole file does not have to be read into memory at once.",
+          "supported": true
+        },
+        {
+          "claim": "The docs example opens a file-like object in a with block and yields each chunk from it.",
+          "supported": true
+        },
+        {
+          "claim": "The with block makes sure the file-like object is closed after the generator function finishes, which is after the response has been sent.",
+          "supported": true
+        },
+        {
+          "claim": "You can stream bytes this way as well as strings.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 35,
+      "question": "How do I set a cookie on the client from my endpoint?",
+      "answer": "The provided excerpts don't cover setting cookies on the client from an endpoint. They only explain how to *declare* cookie parameters, which read cookies sent by the client, using `Cookie` the same way `Query` and `Path` are declared [2][3]. They also note that browsers handle cookies in special ways and that the `/docs` UI's JavaScript won't send cookies, so you may see errors when testing cookie parameters there [1][4][5].\n\nI don't know how to set a response cookie from the excerpts provided. The FastAPI documentation on response cookies would be the place to look.",
+      "claims": [
+        {
+          "claim": "Cookie parameters are declared using `Cookie`, using the same pattern as `Query` and `Path` parameters.",
+          "supported": true
+        },
+        {
+          "claim": "Cookies must be declared with `Cookie` because otherwise the parameters would be interpreted as query parameters.",
+          "supported": true
+        },
+        {
+          "claim": "Cookie parameters read cookies sent by the client.",
+          "supported": false
+        },
+        {
+          "claim": "Browsers handle cookies in special ways and behind the scenes, so they don't easily allow JavaScript to touch them.",
+          "supported": true
+        },
+        {
+          "claim": "The /docs UI's JavaScript does not send cookies when you click Execute.",
+          "supported": true
+        },
+        {
+          "claim": "Testing cookie parameters in the /docs UI can show an error as if no values were written.",
+          "supported": true
+        },
+        {
+          "claim": "The FastAPI documentation covers how to set response cookies.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.7142857142857143
+    },
+    {
+      "id": 36,
+      "question": "How do I add my own header to a response?",
+      "answer": "You can add a header by returning a `Response` directly and passing your headers as a parameter. Create the response (for example, a `JSONResponse`) and pass a dictionary of headers to `headers`:\n\n```python\nfrom fastapi import FastAPI\nfrom fastapi.responses import JSONResponse\n\napp = FastAPI()\n\n\n@app.get(\"/headers/\")\ndef get_headers():\n    content = {\"message\": \"Hello World\"}\n    headers = {\"X-Cat-Dog\": \"alone in the world\", \"Content-Language\": \"en-US\"}\n    return JSONResponse(content=content, headers=headers)\n```\n\n[2]\n\n`fastapi.Response` is also available for this purpose, since it is often used to set headers and cookies [1].\n\nCustom proprietary headers are conventionally named with the `X-` prefix [4]. If a browser client needs to read those custom headers, you must also list them in your CORS configuration using the `expose_headers` parameter [4].",
+      "claims": [
+        {
+          "claim": "You can add a header by returning a Response directly and passing your headers as a parameter.",
+          "supported": true
+        },
+        {
+          "claim": "You create the response, for example a JSONResponse, and pass a dictionary of headers to the headers parameter.",
+          "supported": true
+        },
+        {
+          "claim": "The example returns a JSONResponse from a GET /headers/ endpoint with the headers X-Cat-Dog and Content-Language.",
+          "supported": true
+        },
+        {
+          "claim": "fastapi.Response is available for setting headers, since it is often used to set headers and cookies.",
+          "supported": true
+        },
+        {
+          "claim": "Custom proprietary headers are conventionally named with the X- prefix.",
+          "supported": true
+        },
+        {
+          "claim": "If a browser client needs to read custom headers, they must be listed in the CORS configuration using the expose_headers parameter.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 37,
+      "question": "How do I build a live chat where the server pushes messages to the browser over one open connection?",
+      "answer": "The excerpts show the pieces of a WebSocket chat, but not the complete server endpoint, so I can't give you the full working code from them.\n\n**What the excerpts show:**\n\n- **Setup:** You import `WebSocket` from `fastapi` and create an `app` ([2], [5]).\n- **Browser side:** The page opens a connection with `new WebSocket(\"ws://localhost:8000/ws\")` and assigns an `onmessage` handler, which runs whenever the server pushes a message ([2], [5]). That open connection is what lets the server send messages to the browser without the browser polling.\n- **Disconnects:** For the multi-client version, you import `WebSocketDisconnect` alongside `WebSocket` ([4]). The server raises this exception when a client closes its tab, and the other clients can then be notified, for example \"Client #... left the chat\" ([3]).\n- **Broadcasting:** The example keeps connected clients in a single in-memory list and sends each new message to all of them ([3]).\n\n**Limitations stated in the docs:** Because the connections are held in memory in one list, the approach only works while that process is running and only with a single process. For something more robust, the docs suggest [encode/broadcaster](https://github.com/encode/broadcaster), which is backed by Redis, PostgreSQL, or others ([3]).\n\n**What's missing:** The excerpts cut off before the `@app.websocket(\"/ws\")` endpoint and its send/receive loop, which is where the server accepts connections and pushes messages. For that code, see the full `docs/en/docs/advanced/websockets.md` file, which these excerpts come from.",
+      "claims": [
+        {
+          "claim": "You import WebSocket from fastapi and create an app.",
+          "supported": true
+        },
+        {
+          "claim": "The browser page opens a connection with new WebSocket(\"ws://localhost:8000/ws\").",
+          "supported": true
+        },
+        {
+          "claim": "The browser page assigns an onmessage handler that runs whenever the server pushes a message.",
+          "supported": false
+        },
+        {
+          "claim": "The open connection lets the server send messages to the browser without the browser polling.",
+          "supported": false
+        },
+        {
+          "claim": "For the multi-client version, you import WebSocketDisconnect alongside WebSocket.",
+          "supported": true
+        },
+        {
+          "claim": "The server raises WebSocketDisconnect when a client closes its tab.",
+          "supported": true
+        },
+        {
+          "claim": "Other clients can be notified when a client leaves, with a message such as \"Client #... left the chat\".",
+          "supported": true
+        },
+        {
+          "claim": "The example keeps connected clients in a single in-memory list and broadcasts each new message to all of them.",
+          "supported": true
+        },
+        {
+          "claim": "Because connections are held in memory in one list, the approach only works while the process is running and only with a single process.",
+          "supported": true
+        },
+        {
+          "claim": "The docs suggest encode/broadcaster for something more robust, supported by Redis, PostgreSQL or others.",
+          "supported": true
+        },
+        {
+          "claim": "The server endpoint at @app.websocket(\"/ws\") is where the server accepts connections and pushes messages.",
+          "supported": false
+        },
+        {
+          "claim": "The excerpts come from docs/en/docs/advanced/websockets.md.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.75
+    },
+    {
+      "id": 38,
+      "question": "Should my endpoint functions be async def or plain def?",
+      "answer": "Use `async def` when your endpoint only does non-blocking work, and plain `def` when it calls blocking code. The excerpts give this guidance:\n\n- **Use plain `def`** if you call a third-party library that communicates with something (a database, an API, the file system) and doesn't support `await`, which is currently true of most database libraries [3]. Plain `def` functions run in an external threadpool that FastAPI awaits, instead of being called directly, which would block the server [2].\n- **Use `async def`** if your endpoint doesn't need to communicate with anything else and wait for a response, even if it never uses `await` [3]. For trivial compute-only functions, `async def` is preferred. The speed advantage of plain `def` is only about 100 nanoseconds, and the threadpool overhead can outweigh it, so `async def` is better unless the function performs blocking I/O [2].\n- **If you're unsure, use plain `def`** [3].",
+      "claims": [
+        {
+          "claim": "Use `async def` when the endpoint only does non-blocking work",
+          "supported": true
+        },
+        {
+          "claim": "Use plain `def` when the endpoint calls blocking code",
+          "supported": true
+        },
+        {
+          "claim": "Use plain `def` if calling a third-party library that communicates with something and doesn't support `await`",
+          "supported": true
+        },
+        {
+          "claim": "Most database libraries currently don't support `await`",
+          "supported": true
+        },
+        {
+          "claim": "Plain `def` functions run in an external threadpool that is awaited, instead of being called directly",
+          "supported": true
+        },
+        {
+          "claim": "Calling a plain `def` function directly would block the server",
+          "supported": true
+        },
+        {
+          "claim": "Use `async def` if the endpoint doesn't need to communicate with anything else and wait for a response, even without using `await`",
+          "supported": true
+        },
+        {
+          "claim": "For trivial compute-only functions, `async def` is preferred",
+          "supported": true
+        },
+        {
+          "claim": "The speed advantage of plain `def` is only about 100 nanoseconds",
+          "supported": true
+        },
+        {
+          "claim": "The threadpool overhead can outweigh the speed advantage of plain `def`",
+          "supported": false
+        },
+        {
+          "claim": "`async def` is better than plain `def` unless the function performs blocking I/O",
+          "supported": true
+        },
+        {
+          "claim": "If you are unsure, use plain `def`",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.9166666666666666
+    },
+    {
+      "id": 39,
+      "question": "How do I package my app in a Docker container?",
+      "answer": "You package a FastAPI app as a **Linux container image**, usually with [**Docker**](https://www.docker.com/) [2]. The excerpts describe the overall process but don't include the full `Dockerfile` contents.\n\n1. **Lay out your project.** Put a `Dockerfile` and `requirements.txt` next to your code. For a single file such as `main.py` with no `app` directory, the structure is `Dockerfile`, `main.py`, and `requirements.txt`. The `Dockerfile` then needs its paths changed to copy that file [3]. If your app is a package in an `app` directory, the project directory should contain both the `Dockerfile` and the `app` directory [5].\n\n2. **Write the `Dockerfile`.** The excerpts don't show its contents, so you'll need the full guide for that part.\n\n3. **Build the image.** From the project directory (where the `Dockerfile` is), run:\n\n   ```console\n   $ docker build -t myimage .\n   ```\n\n   The trailing `.` tells Docker to use the current directory as the build context [5].\n\n4. **Run the app in the container.** The excerpts say that when you pass a single file to `fastapi run`, FastAPI detects that it is not part of a package and knows how to import and serve the app [1]. The excerpts don't show the exact command the container runs.\n\nOnce you have the image, you can deploy it with Docker Compose on a single server, a Kubernetes cluster, Docker Swarm Mode, Nomad, or a cloud service that accepts container images [4].",
+      "claims": [
+        {
+          "claim": "A FastAPI app is packaged as a Linux container image, usually with Docker.",
+          "supported": true
+        },
+        {
+          "claim": "The project directory should contain a Dockerfile and a requirements.txt next to the code.",
+          "supported": true
+        },
+        {
+          "claim": "For a single file such as main.py with no app directory, the file structure is Dockerfile, main.py, and requirements.txt.",
+          "supported": true
+        },
+        {
+          "claim": "For a single-file app, the paths in the Dockerfile must be changed to copy that file.",
+          "supported": true
+        },
+        {
+          "claim": "If the app is a package in an app directory, the project directory should contain both the Dockerfile and the app directory.",
+          "supported": true
+        },
+        {
+          "claim": "The image is built from the project directory with the command `docker build -t myimage .`.",
+          "supported": true
+        },
+        {
+          "claim": "The trailing `.` in the build command tells Docker which directory to use to build the image, which is the current directory.",
+          "supported": true
+        },
+        {
+          "claim": "When a single file is passed to `fastapi run`, FastAPI detects that it is not part of a package and knows how to import and serve the app.",
+          "supported": true
+        },
+        {
+          "claim": "A container image can be deployed with Docker Compose on a single server, a Kubernetes cluster, Docker Swarm Mode, Nomad, or a cloud service that accepts container images.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 40,
+      "question": "What command should I use to run the app in production?",
+      "answer": "For production, use `uv run fastapi run` [1]. The development command is `uv run fastapi dev` [1].\n\n`fastapi run` doesn't change the `FASTAPI_ENV` variable. If your app needs to detect production mode, set `FASTAPI_ENV` to `production` yourself [2].",
+      "claims": [
+        {
+          "claim": "For production, use `uv run fastapi run`.",
+          "supported": true
+        },
+        {
+          "claim": "The development command is `uv run fastapi dev`.",
+          "supported": true
+        },
+        {
+          "claim": "`fastapi run` doesn't change the `FASTAPI_ENV` variable.",
+          "supported": true
+        },
+        {
+          "claim": "If your app needs to detect production mode, set `FASTAPI_ENV` to `production` yourself.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 41,
+      "question": "How do I compress responses so they download faster?",
+      "answer": "The provided excerpts don't cover response compression, so I can't say how to make responses download faster by compressing them.\n\nThe excerpts only cover related topics. They say that using a Response Model and not declaring a `response_class` gives the best performance [1], and that Pydantic serializes data to JSON on the Rust side, which is faster than the deprecated custom JSON responses [5]. They also describe `FileResponse`, which sends `Content-Length`, `Last-Modified`, and `ETag` headers [3]. None of this addresses compression.",
+      "claims": [
+        {
+          "claim": "Using a Response Model and not declaring a `response_class` gives the maximum performance.",
+          "supported": true
+        },
+        {
+          "claim": "Pydantic serializes data into JSON bytes on the Rust side.",
+          "supported": true
+        },
+        {
+          "claim": "Using a Response Model with Pydantic serialization achieves better performance than the custom JSON response classes.",
+          "supported": true
+        },
+        {
+          "claim": "The custom FastAPI JSON response classes intended to optimize JSON performance are deprecated.",
+          "supported": true
+        },
+        {
+          "claim": "FileResponse includes Content-Length, Last-Modified, and ETag headers in the response.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 42,
+      "question": "How do I force all requests to use HTTPS?",
+      "answer": "The provided excerpts don't say how to force all requests to use HTTPS, so I can't give you a configuration for that.\n\nThey do describe the setup where HTTPS is handled outside the application. A **TLS Termination Proxy** receives the encrypted HTTPS requests, forwards decrypted HTTP requests to the FastAPI app on the same server, and encrypts the responses before sending them back to the client [1]. However, the list of specific proxy options that follows is cut off in the excerpt, and nothing here covers redirecting HTTP traffic to HTTPS.\n\nThe excerpts also say that HTTPS details are handled in later chapters, with concrete examples for FastAPI applications [4]. The FastAPI HTTPS deployment guide is the best place to look for redirect configuration.",
+      "claims": [
+        {
+          "claim": "A TLS Termination Proxy receives the encrypted HTTPS requests, forwards decrypted HTTP requests to the FastAPI app on the same server, and encrypts the responses before sending them back to the client.",
+          "supported": true
+        },
+        {
+          "claim": "The documentation describes a setup where HTTPS is handled outside the application itself.",
+          "supported": true
+        },
+        {
+          "claim": "The FastAPI HTTPS deployment guide is the best place to look for redirect configuration.",
+          "supported": false
+        },
+        {
+          "claim": "The later chapters include concrete examples of setting up HTTPS for FastAPI applications.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 0.75
+    },
+    {
+      "id": 43,
+      "question": "Can I run my existing Flask app inside a FastAPI app?",
+      "answer": "I don't know. The provided excerpts don't mention Flask or how to run a Flask app inside FastAPI.\n\nThey only cover configuring the `fastapi` CLI entrypoint [1][3][5], serving built frontend files with `app.frontend()` [2], and what `fastapi dev` does [4]. For the Flask question, you'd need the FastAPI documentation section on mounting or integrating other WSGI applications.",
+      "claims": [
+        {
+          "claim": "The fastapi CLI's app location can be configured with an entrypoint setting in pyproject.toml.",
+          "supported": true
+        },
+        {
+          "claim": "A FastAPI app can serve built frontend files using app.frontend().",
+          "supported": true
+        },
+        {
+          "claim": "The fastapi dev command reads main.py, detects the FastAPI app, and starts a server using Uvicorn.",
+          "supported": true
+        },
+        {
+          "claim": "fastapi dev has auto-reload enabled by default.",
+          "supported": true
+        },
+        {
+          "claim": "Answering the Flask question would require a FastAPI documentation section on mounting or integrating other WSGI applications.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.8
+    },
+    {
+      "id": 44,
+      "question": "How do I change the URL of the interactive docs page, or turn it off?",
+      "answer": "You can change the URL of the interactive docs or turn them off with the `docs_url` and `redoc_url` parameters when you create your `FastAPI` app.\n\nThere are two interactive documentation interfaces:\n\n* **Swagger UI**, served at `/docs` by default. Set its URL with `docs_url`, or disable it with `docs_url=None`. [3]\n* **ReDoc**, served at `/redoc` by default. Set its URL with `redoc_url`, or disable it with `redoc_url=None`. [3]\n\nThe docs show an example that serves Swagger UI at `/documentation` and disables ReDoc, but the excerpt doesn't include the code itself. [3]\n\n[2] also shows that setting these URLs to `None` disables the automatic docs. [2]",
+      "claims": [
+        {
+          "claim": "You can change the URL of the interactive docs or turn them off with the docs_url and redoc_url parameters when you create your FastAPI app.",
+          "supported": true
+        },
+        {
+          "claim": "There are two interactive documentation interfaces.",
+          "supported": true
+        },
+        {
+          "claim": "Swagger UI is served at /docs by default.",
+          "supported": true
+        },
+        {
+          "claim": "Swagger UI's URL is set with docs_url, and it can be disabled with docs_url=None.",
+          "supported": true
+        },
+        {
+          "claim": "ReDoc is served at /redoc by default.",
+          "supported": true
+        },
+        {
+          "claim": "ReDoc's URL is set with redoc_url, and it can be disabled with redoc_url=None.",
+          "supported": true
+        },
+        {
+          "claim": "The docs show an example that serves Swagger UI at /documentation and disables ReDoc.",
+          "supported": true
+        },
+        {
+          "claim": "Setting the docs URLs to None disables the automatic docs.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 45,
+      "question": "How do I set the title, description and version shown in the API docs?",
+      "answer": "You set them as parameters when you create the `FastAPI` app. The excerpts list the fields: `title` (the API title), `description` (a short description that can use Markdown), and `version` (your application's version, such as `2.5.0`, not the OpenAPI version) [1]. The docs say \"You can set them as follows\" and then show a code example that passes `license_info` to the app [2][3]. The excerpt cuts off before the lines that set `title`, `description`, and `version`, so I can't show the exact lines from these excerpts.\n\nThe Markdown note is in the docs: you can write Markdown in the `description` field and it will render in the output [3].",
+      "claims": [
+        {
+          "claim": "The API title, description, and version are set as parameters when creating the FastAPI app.",
+          "supported": true
+        },
+        {
+          "claim": "The `title` field is the title of the API.",
+          "supported": true
+        },
+        {
+          "claim": "The `description` field is a short description of the API that can use Markdown.",
+          "supported": true
+        },
+        {
+          "claim": "The `version` field is the version of the user's own application, not the OpenAPI version.",
+          "supported": true
+        },
+        {
+          "claim": "The docs show a code example that passes `license_info` to the app after introducing the fields with 'You can set them as follows'.",
+          "supported": true
+        },
+        {
+          "claim": "Markdown written in the `description` field is rendered in the output.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 46,
+      "question": "How do I mark an old endpoint as deprecated?",
+      "answer": "To mark a *path operation* as deprecated without removing it, pass the `deprecated` parameter to it [1]. The docs then show deprecated and non-deprecated *path operations* differently in the UI [5].\n\nThe same idea applies to parameters. For a query parameter, you pass `deprecated=True` to `Query` [3]. The excerpts don't include the full code example for the path operation case, so I can't show the exact decorator usage beyond that.",
+      "claims": [
+        {
+          "claim": "To mark a path operation as deprecated without removing it, you pass the `deprecated` parameter to it.",
+          "supported": true
+        },
+        {
+          "claim": "The docs show deprecated and non-deprecated path operations differently in the UI.",
+          "supported": true
+        },
+        {
+          "claim": "For a query parameter, you pass `deprecated=True` to `Query`.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 47,
+      "question": "How do I group my endpoints into sections in the docs page?",
+      "answer": "To group your endpoints into sections in the docs UI, add **tags** to your *path operations*. [1] says that adding tags to *path operations* groups them in the docs UI, and points to the Path Operation Configuration tutorial for details.\n\nYou can also describe each tag with the `openapi_tags` parameter. It takes a list with one dictionary per tag. Each dictionary requires a `name`, which must match the tag name you use in the `tags` parameter of your *path operations* and `APIRouter`s. You can optionally add a `description`, which can include Markdown and is shown in the docs UI, and `externalDocs` with a `url` and optional `description` for external documentation. [2]\n\nThe excerpts don't include a code example, so I can't show the exact syntax.",
+      "claims": [
+        {
+          "claim": "To group endpoints into sections in the docs UI, you add tags to your path operations.",
+          "supported": true
+        },
+        {
+          "claim": "Adding tags to path operations groups them in the docs UI.",
+          "supported": true
+        },
+        {
+          "claim": "The Path Operation Configuration tutorial gives more details on adding tags.",
+          "supported": true
+        },
+        {
+          "claim": "The openapi_tags parameter can be used to describe each tag.",
+          "supported": true
+        },
+        {
+          "claim": "The openapi_tags parameter takes a list with one dictionary per tag.",
+          "supported": true
+        },
+        {
+          "claim": "Each openapi_tags dictionary requires a name.",
+          "supported": true
+        },
+        {
+          "claim": "The name in openapi_tags must match the tag name used in the tags parameter of path operations and APIRouters.",
+          "supported": true
+        },
+        {
+          "claim": "The description in openapi_tags can include Markdown and is shown in the docs UI.",
+          "supported": true
+        },
+        {
+          "claim": "externalDocs in openapi_tags takes a required url and an optional description.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 48,
+      "question": "How do I turn a Pydantic model that contains a datetime into plain JSON-compatible data?",
+      "answer": "Use `jsonable_encoder` from `fastapi.encoders`. It takes an object, such as a Pydantic model, and returns a JSON-compatible version [2]. In the example, it converts the Pydantic model to a `dict` and the `datetime` to a `str` [1].\n\n```python\nfrom datetime import datetime\n\nfrom fastapi.encoders import jsonable_encoder\nfrom pydantic import BaseModel\n\n\nclass Item(BaseModel):\n    title: str\n    timestamp: datetime\n    description: str | None = None\n\n\nitem = Item(title=\"Foo\", timestamp=datetime(2024, 1, 1, 12, 0))\njson_compatible_item_data = jsonable_encoder(item)\n```\n\nA `datetime` is converted to a string in [ISO format](https://en.wikipedia.org/wiki/ISO_8601) [2]. The example above is adapted from the documentation excerpts [1]. The excerpts don't show the exact output string for this specific input, so I haven't stated it.",
+      "claims": [
+        {
+          "claim": "Use `jsonable_encoder` from `fastapi.encoders` to turn a Pydantic model into JSON-compatible data.",
+          "supported": true
+        },
+        {
+          "claim": "`jsonable_encoder` receives an object, such as a Pydantic model, and returns a JSON-compatible version of it.",
+          "supported": true
+        },
+        {
+          "claim": "In the example, `jsonable_encoder` converts the Pydantic model to a `dict`.",
+          "supported": true
+        },
+        {
+          "claim": "In the example, `jsonable_encoder` converts the `datetime` to a `str`.",
+          "supported": true
+        },
+        {
+          "claim": "A `datetime` is converted to a string in ISO format.",
+          "supported": true
+        },
+        {
+          "claim": "The example above is adapted from the documentation excerpts.",
+          "supported": false
+        }
+      ],
+      "faithfulness": 0.8333333333333334
+    },
+    {
+      "id": 49,
+      "question": "How do I update only the fields the client actually sent?",
+      "answer": "To update only the fields the client actually sent, use a partial update with `PATCH` and `exclude_unset`:\n\n1. **Use `PATCH`.** It is meant for partial updates, so the client sends only the data it wants to change, and the rest stays intact [1]. (Many teams use `PUT` for partial updates too, but the guide follows the intended use of `PATCH` [1][4].)\n\n2. **Make the input model's fields optional.** Partial updates can omit attributes only if every attribute in the input model is optional, with a default value or `None`. The input model is still validated [4].\n\n3. **Generate a `dict` from the input model with `exclude_unset`.** This keeps only the values the user set, not the model's default values. That way you override only what was sent, instead of overwriting stored values with defaults [5].\n\n4. **Update a copy of the stored model.** Retrieve the stored data, put it in a Pydantic model, and create a copy that applies the partial updates using the `update` parameter [5].\n\n5. **Save the result.** Convert the copied model to a storable form, such as with `jsonable_encoder`, save it to your database, and return the updated model [5][2].\n\nThe excerpts describe these steps but don't include the code itself, so check the full `body-updates.md` tutorial for the exact syntax.",
+      "claims": [
+        {
+          "claim": "To update only the fields the client actually sent, use PATCH with exclude_unset.",
+          "supported": true
+        },
+        {
+          "claim": "The HTTP PATCH operation is meant for partially updating data, so the client sends only the data it wants to change and the rest stays intact.",
+          "supported": true
+        },
+        {
+          "claim": "Many teams use only PUT, even for partial updates.",
+          "supported": true
+        },
+        {
+          "claim": "The guide shows how PATCH is intended to be used.",
+          "supported": true
+        },
+        {
+          "claim": "Partial updates can omit attributes only if all attributes in the input model are optional, with default values or None.",
+          "supported": true
+        },
+        {
+          "claim": "The input model is still validated during partial updates.",
+          "supported": true
+        },
+        {
+          "claim": "Generating a dict from the input model with exclude_unset keeps only the values the user set, not the model's default values.",
+          "supported": true
+        },
+        {
+          "claim": "Using exclude_unset lets you update only the values actually set by the user, instead of overriding stored values with model defaults.",
+          "supported": true
+        },
+        {
+          "claim": "The approach retrieves the stored data, puts it in a Pydantic model, and creates a copy that applies the partial updates using the update parameter.",
+          "supported": true
+        },
+        {
+          "claim": "The copied model is converted with something like jsonable_encoder so it can be stored in the DB, then saved and the updated model returned.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    },
+    {
+      "id": 50,
+      "question": "How do I only allow a path parameter to be one of a few fixed values?",
+      "answer": "You can use a standard Python `Enum`. The docs say that if you want a *path operation* with a *path parameter* to accept only predefined values, you can use a standard Python `Enum` [2].\n\nThe excerpts I have don't include the full code example, so I can't show the exact syntax from the docs.",
+      "claims": [
+        {
+          "claim": "You can use a standard Python Enum to only allow a path parameter to be one of a few fixed values.",
+          "supported": true
+        },
+        {
+          "claim": "If you want a path operation with a path parameter to accept only predefined values, the docs say you can use a standard Python Enum.",
+          "supported": true
+        }
+      ],
+      "faithfulness": 1.0
+    }
+  ]
+}
