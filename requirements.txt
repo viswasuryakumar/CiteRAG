@@ -1,3 +1,9 @@
 sentence-transformers
 transformers
 numpy
+openai
+python-dotenv
+pgvector
+# Pinned: newer builds of these two are blocked by Windows Application Control on this laptop.
+jiter==0.18.0
+psycopg[binary]==3.2.9

@@ -1,0 +1,16 @@
+# Postgres with the pgvector extension already installed.
+# Start:  docker compose up -d      Stop:  docker compose down
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: rag
+      POSTGRES_PASSWORD: rag        # local development only
+      POSTGRES_DB: rag
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data   # keeps the data when the container restarts
+
+volumes:
+  pgdata:
