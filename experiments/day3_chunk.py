@@ -26,6 +26,10 @@ SKIP_FILES = {"release-notes.md"}
 # Matches "# Title", "## Title", "### Title" and drops the "{ #anchor }" suffix.
 HEADING = re.compile(r"^(#{1,3}) (.+?)(?: \{ #[\w-]+ \})?\s*$")
 
+# Code examples aren't written in the .md files. A line like
+#   {* ../../docs_src/handling_errors/tutorial001.py hl[1] *}
+# points to a code file; this captures "handling_errors/tutorial001.py".
+CODE_POINTER = re.compile(r"^\{\* \S*docs_src/(\S+)")
 
 
 def count_tokens(text: str) -> int:
@@ -42,7 +46,30 @@ def make_paragraph(headings: list[str], numbered_lines: list[tuple[int, str]]) -
     }
 
 
-def parse_paragraphs(lines: list[str]) -> list[dict]:
+def expand_code_pointers(lines: list[str]) -> list[tuple[int, str]]:
+    """Number every line, and replace each code pointer with the code it points to.
+
+    The pasted code lines all get the pointer's line number, so a citation still
+    points to the right place in the .md file.
+    """
+    numbered_lines = []
+    for line_number, line in enumerate(lines, start=1):
+        stripped = line.strip()
+        if not stripped.startswith("{*"):
+            numbered_lines.append((line_number, line))
+            continue
+        match = CODE_POINTER.match(stripped)
+        code_file = REPO_DIR / "docs_src" / match.group(1) if match else None
+        if code_file and code_file.exists():
+            code_lines = code_file.read_text(encoding="utf-8").splitlines()
+            # Wrap in ``` so the code-block logic below treats it like any other code block.
+            for code_line in ["```python", *code_lines, "```"]:
+                numbered_lines.append((line_number, code_line))
+        # Otherwise it points to a file we don't have: skip the pointer line.
+    return numbered_lines
+
+
+def parse_paragraphs(numbered_lines: list[tuple[int, str]]) -> list[dict]:
     """Split a markdown file into paragraphs, each tagged with its heading path and line numbers."""
     paragraphs = []
     headings = []        # the headings we are currently under
@@ -50,7 +77,7 @@ def parse_paragraphs(lines: list[str]) -> list[dict]:
     current_tokens = 0
     in_code = False      # are we inside a ``` code block?
 
-    for line_number, line in enumerate(lines, start=1):
+    for line_number, line in numbered_lines:
         stripped = line.strip()
         if stripped.startswith("```"):
             in_code = not in_code
@@ -66,8 +93,7 @@ def parse_paragraphs(lines: list[str]) -> list[dict]:
             if heading:
                 level = len(heading.group(1))                  # "##" -> 2
                 headings = headings[: level - 1] + [heading.group(2)]
-        elif not stripped.startswith("{*"):
-            # "{* ../../docs_src/... *}" lines pull in code examples at build time; skip them.
+        else:
             line_tokens = count_tokens(line)
             # One paragraph bigger than the limit (usually a long code block): cut it here.
             if current and current_tokens + line_tokens > MAX_TOKENS:
@@ -118,7 +144,7 @@ def main() -> None:
             continue
         lines = path.read_text(encoding="utf-8").splitlines()
         file_name = path.relative_to(REPO_DIR).as_posix()   # e.g. docs/en/docs/tutorial/path-params.md
-        for chunk in pack_into_chunks(parse_paragraphs(lines)):
+        for chunk in pack_into_chunks(parse_paragraphs(expand_code_pointers(lines))):
             all_chunks.append({"file": file_name, **chunk})
 
     with OUTPUT_FILE.open("w", encoding="utf-8") as f:
