@@ -7,18 +7,23 @@ claims and checks each claim against the retrieved chunks.
 Needs: the database filled by day3_ingest.py, and OPENROUTER_API_KEY in .env.
 Run:   python eval/run_faithfulness_eval.py              (all 50 questions, saved as "naive")
        python eval/run_faithfulness_eval.py naive 10     (only the first 10 questions)
+       python eval/run_faithfulness_eval.py hybrid       (answers built from hybrid retrieval)
 Cost:  two LLM calls per question; about $0.05 for all 50 with Claude Haiku 5.5.
 """
+import importlib
 import json
 import sys
 from pathlib import Path
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_DIR / "experiments"))
-from day3_ask import build_prompt, client, generate, retrieve  # noqa: E402
+from day3_ask import build_prompt, client, generate  # noqa: E402
 
 GOLDEN_SET = PROJECT_DIR / "eval" / "golden_set.jsonl"
 RESULTS_DIR = PROJECT_DIR / "eval" / "results"
+
+# Run name -> the file whose retrieve() feeds the answers.
+RETRIEVERS = {"naive": "day3_ask", "hybrid": "day6_hybrid"}
 
 # The judge. Using the same cheap model that wrote the answers keeps costs low, but a model
 # grading its own family can be lenient; swap in a stronger model here to compare.
@@ -54,6 +59,7 @@ def judge(question: str, chunks: list[dict], answer: str) -> list[dict]:
 def main() -> None:
     run_name = sys.argv[1] if len(sys.argv) > 1 else "naive"
     limit = int(sys.argv[2]) if len(sys.argv) > 2 else None
+    retrieve = importlib.import_module(RETRIEVERS[run_name]).retrieve
     items = [json.loads(line) for line in GOLDEN_SET.open(encoding="utf-8")][:limit]
 
     rows = []

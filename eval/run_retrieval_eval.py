@@ -1,16 +1,19 @@
 """Day 4: measure retrieval quality on the golden set with recall@k and MRR.
 
 Needs: the database filled by day3_ingest.py.
-Run:   python eval/run_retrieval_eval.py            (saves results as "naive")
-       python eval/run_retrieval_eval.py hybrid     (saves results under another name)
+Run:   python eval/run_retrieval_eval.py            (naive vector search, saved as "naive")
+       python eval/run_retrieval_eval.py hybrid     (vector + BM25 with RRF, saved as "hybrid")
 """
+import importlib
 import json
 import sys
 from pathlib import Path
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_DIR / "experiments"))
-from day3_ask import retrieve  # noqa: E402  (the retrieval we are measuring)
+
+# Run name -> the file whose retrieve() we measure.
+RETRIEVERS = {"naive": "day3_ask", "hybrid": "day6_hybrid"}
 
 GOLDEN_SET = PROJECT_DIR / "eval" / "golden_set.jsonl"
 RESULTS_DIR = PROJECT_DIR / "eval" / "results"
@@ -33,7 +36,7 @@ def is_relevant(chunk: dict, relevant: list[dict]) -> bool:
     return False
 
 
-def first_correct_rank(question: str, relevant: list[dict]) -> int | None:
+def first_correct_rank(retrieve, question: str, relevant: list[dict]) -> int | None:
     """Rank (1 = top) of the first correct chunk, or None if not in the top LOOK_DEEPER."""
     chunks = retrieve(question, k=LOOK_DEEPER)
     for rank, chunk in enumerate(chunks, start=1):
@@ -44,11 +47,12 @@ def first_correct_rank(question: str, relevant: list[dict]) -> int | None:
 
 def main() -> None:
     run_name = sys.argv[1] if len(sys.argv) > 1 else "naive"
+    retrieve = importlib.import_module(RETRIEVERS[run_name]).retrieve
     items = [json.loads(line) for line in GOLDEN_SET.open(encoding="utf-8")]
 
     rows = []
     for item in items:
-        rank = first_correct_rank(item["question"], item["relevant"])
+        rank = first_correct_rank(retrieve, item["question"], item["relevant"])
         hit = rank is not None and rank <= K
         rows.append({
             "id": item["id"],

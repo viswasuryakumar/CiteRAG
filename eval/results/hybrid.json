@@ -1,0 +1,357 @@
+{
+  "recall_at_k": 0.84,
+  "mrr_at_k": 0.6389999999999999,
+  "k": 5,
+  "rows": [
+    {
+      "id": 1,
+      "question": "How do I return a 404 error?",
+      "rank": 4,
+      "hit": true,
+      "reciprocal_rank": 0.25
+    },
+    {
+      "id": 2,
+      "question": "How can I run something after the response has already been sent to the client?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 3,
+      "question": "My React app on another domain gets blocked by the browser when it calls my API. How do I allow it?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 4,
+      "question": "How do I read a value from the URL, like the 5 in /items/5?",
+      "rank": 20,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 5,
+      "question": "How do I make a query parameter optional?",
+      "rank": 5,
+      "hit": true,
+      "reciprocal_rank": 0.2
+    },
+    {
+      "id": 6,
+      "question": "How do I force the client to always send a certain query parameter?",
+      "rank": 7,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 7,
+      "question": "How do I limit how long a search string in the URL can be?",
+      "rank": 10,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 8,
+      "question": "How can I accept several values for the same query parameter, like ?tag=a&tag=b?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 9,
+      "question": "How do I reject an item ID in the path if it's zero or negative?",
+      "rank": 2,
+      "hit": true,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "id": 10,
+      "question": "How do I accept JSON data in a POST request?",
+      "rank": 4,
+      "hit": true,
+      "reciprocal_rank": 0.25
+    },
+    {
+      "id": 11,
+      "question": "How do I receive data from an HTML form instead of JSON?",
+      "rank": 2,
+      "hit": true,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "id": 12,
+      "question": "How can users upload a file to my API?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 13,
+      "question": "How can a client upload several files in one request?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 14,
+      "question": "How do I read the User-Agent sent by the browser?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 15,
+      "question": "How do I read a cookie that the client sent?",
+      "rank": 2,
+      "hit": true,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "id": 16,
+      "question": "How do I make sure the user's password is never included in what my endpoint returns?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 17,
+      "question": "How do I make my create endpoint respond with 201 instead of 200?",
+      "rank": 8,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 18,
+      "question": "How do I reuse the same setup logic, like getting a DB session, across many endpoints?",
+      "rank": 25,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 19,
+      "question": "How do I close the database connection after each request is done?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 20,
+      "question": "How do I run an API key check on every endpoint without repeating it everywhere?",
+      "rank": 20,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 21,
+      "question": "My main.py is getting huge. How do I split my endpoints into several files?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 22,
+      "question": "How do I measure how long every request takes to process?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 23,
+      "question": "How do I serve images and CSS files from a folder?",
+      "rank": 4,
+      "hit": true,
+      "reciprocal_rank": 0.25
+    },
+    {
+      "id": 24,
+      "question": "How do I write automated tests for my endpoints?",
+      "rank": 2,
+      "hit": true,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "id": 25,
+      "question": "In my tests, how do I swap the real database dependency for a fake one?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 26,
+      "question": "How do I build a login where users send a username and password and get a token back?",
+      "rank": 7,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 27,
+      "question": "How should I store user passwords safely?",
+      "rank": 2,
+      "hit": true,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "id": 28,
+      "question": "How do I create and check JWT tokens?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 29,
+      "question": "Inside an endpoint, how do I get the user who is currently logged in?",
+      "rank": 2,
+      "hit": true,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "id": 30,
+      "question": "How do I connect my app to a SQL database?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 31,
+      "question": "How do I load a machine learning model once when the app starts and free it when it stops?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 32,
+      "question": "How do I read configuration from environment variables or a .env file?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 33,
+      "question": "How do I return an HTML page instead of JSON?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 34,
+      "question": "How do I send a big response bit by bit instead of all at once?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 35,
+      "question": "How do I set a cookie on the client from my endpoint?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 36,
+      "question": "How do I add my own header to a response?",
+      "rank": 6,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 37,
+      "question": "How do I build a live chat where the server pushes messages to the browser over one open connection?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 38,
+      "question": "Should my endpoint functions be async def or plain def?",
+      "rank": 2,
+      "hit": true,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "id": 39,
+      "question": "How do I package my app in a Docker container?",
+      "rank": 3,
+      "hit": true,
+      "reciprocal_rank": 0.3333333333333333
+    },
+    {
+      "id": 40,
+      "question": "What command should I use to run the app in production?",
+      "rank": 3,
+      "hit": true,
+      "reciprocal_rank": 0.3333333333333333
+    },
+    {
+      "id": 41,
+      "question": "How do I compress responses so they download faster?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 42,
+      "question": "How do I force all requests to use HTTPS?",
+      "rank": 2,
+      "hit": true,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "id": 43,
+      "question": "Can I run my existing Flask app inside a FastAPI app?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 44,
+      "question": "How do I change the URL of the interactive docs page, or turn it off?",
+      "rank": 3,
+      "hit": true,
+      "reciprocal_rank": 0.3333333333333333
+    },
+    {
+      "id": 45,
+      "question": "How do I set the title, description and version shown in the API docs?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 46,
+      "question": "How do I mark an old endpoint as deprecated?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 47,
+      "question": "How do I group my endpoints into sections in the docs page?",
+      "rank": 2,
+      "hit": true,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "id": 48,
+      "question": "How do I turn a Pydantic model that contains a datetime into plain JSON-compatible data?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 49,
+      "question": "How do I update only the fields the client actually sent?",
+      "rank": 2,
+      "hit": true,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "id": 50,
+      "question": "How do I only allow a path parameter to be one of a few fixed values?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    }
+  ]
+}
