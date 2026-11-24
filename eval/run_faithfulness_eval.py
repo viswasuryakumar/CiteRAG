@@ -23,7 +23,7 @@ GOLDEN_SET = PROJECT_DIR / "eval" / "golden_set.jsonl"
 RESULTS_DIR = PROJECT_DIR / "eval" / "results"
 
 # Run name -> the file whose retrieve() feeds the answers.
-RETRIEVERS = {"naive": "day3_ask", "hybrid": "day6_hybrid"}
+RETRIEVERS = {"naive": "day3_ask", "hybrid": "day6_hybrid", "hybrid_rerank": "day7_rerank"}
 
 # The judge. Using the same cheap model that wrote the answers keeps costs low, but a model
 # grading its own family can be lenient; swap in a stronger model here to compare.

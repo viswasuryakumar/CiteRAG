@@ -3,6 +3,7 @@
 Needs: the database filled by day3_ingest.py.
 Run:   python eval/run_retrieval_eval.py            (naive vector search, saved as "naive")
        python eval/run_retrieval_eval.py hybrid     (vector + BM25 with RRF, saved as "hybrid")
+       python eval/run_retrieval_eval.py hybrid_rerank   (hybrid + cross-encoder reranker)
 """
 import importlib
 import json
@@ -13,7 +14,7 @@ PROJECT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_DIR / "experiments"))
 
 # Run name -> the file whose retrieve() we measure.
-RETRIEVERS = {"naive": "day3_ask", "hybrid": "day6_hybrid"}
+RETRIEVERS = {"naive": "day3_ask", "hybrid": "day6_hybrid", "hybrid_rerank": "day7_rerank"}
 
 GOLDEN_SET = PROJECT_DIR / "eval" / "golden_set.jsonl"
 RESULTS_DIR = PROJECT_DIR / "eval" / "results"
