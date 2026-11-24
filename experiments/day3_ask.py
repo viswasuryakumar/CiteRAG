@@ -21,7 +21,8 @@ TOP_K = 5
 # Any model id from openrouter.ai/models works here. Claude Haiku 5.5: $0.10 / $0.50 per 1M tokens.
 MODEL = "anthropic/claude-haiku-5.5"
 
-SYSTEM_PROMPT = """You answer questions about FastAPI using only the documentation excerpts provided.
+SYSTEM_PROMPT = """You answer questions about FastAPI using only the excerpts provided
+(from its documentation and its source code).
 Cite the excerpts you used by their number, like [2].
 If the excerpts don't contain the answer, say you don't know instead of guessing."""
 
@@ -59,7 +60,7 @@ def build_prompt(question: str, chunks: list[dict]) -> str:
         f"[{i}] {c['file']}, lines {c['start_line']}-{c['end_line']}\n{c['text']}"
         for i, c in enumerate(chunks, start=1)
     )
-    return f"Documentation excerpts:\n\n{excerpts}\n\nQuestion: {question}"
+    return f"Excerpts:\n\n{excerpts}\n\nQuestion: {question}"
 
 
 def generate(question: str, chunks: list[dict]) -> str:

@@ -48,3 +48,13 @@
 {"id": 48, "question": "How do I turn a Pydantic model that contains a datetime into plain JSON-compatible data?", "relevant": [{"file": "docs/en/docs/tutorial/encoder.md", "lines": [1, 35]}]}
 {"id": 49, "question": "How do I update only the fields the client actually sent?", "relevant": [{"file": "docs/en/docs/tutorial/body-updates.md", "lines": [29, 100]}]}
 {"id": 50, "question": "How do I only allow a path parameter to be one of a few fixed values?", "relevant": [{"file": "docs/en/docs/tutorial/path-params.md", "lines": [131, 201]}]}
+{"id": 51, "question": "In FastAPI's source, how does OAuth2PasswordBearer pull the token out of the request?", "relevant": [{"file": "fastapi/security/oauth2.py", "lines": [536, 544]}]}
+{"id": 52, "question": "What does FastAPI's code do when the Authorization header for HTTP Basic auth is malformed?", "relevant": [{"file": "fastapi/security/http.py", "lines": [204, 221]}]}
+{"id": 53, "question": "Where in the FastAPI code is a plain def endpoint sent to a threadpool instead of being awaited?", "relevant": [{"file": "fastapi/routing.py", "lines": [363, 377]}]}
+{"id": 54, "question": "Which function in the FastAPI codebase decides whether a status code like 204 is allowed to have a response body?", "relevant": [{"file": "fastapi/utils.py", "lines": [26, 40]}]}
+{"id": 55, "question": "How does FastAPI's built-in handler turn an HTTPException into a JSON response?", "relevant": [{"file": "fastapi/exception_handlers.py", "lines": [11, 17]}]}
+{"id": 56, "question": "Where is the code that builds the default 422 response when request validation fails?", "relevant": [{"file": "fastapi/exception_handlers.py", "lines": [20, 26]}]}
+{"id": 57, "question": "How does BackgroundTasks store a function so it runs after the response is sent?", "relevant": [{"file": "fastapi/background.py", "lines": [41, 62]}]}
+{"id": 58, "question": "What happens inside FastAPI when an API key is missing from the request?", "relevant": [{"file": "fastapi/security/api_key.py", "lines": [47, 52]}, {"file": "fastapi/security/api_key.py", "lines": [230, 232]}]}
+{"id": 59, "question": "How does FastAPI's source generate the unique operation ID for each route?", "relevant": [{"file": "fastapi/utils.py", "lines": [95, 100]}]}
+{"id": 60, "question": "In FastAPI's code, how is the final status code of a response chosen when I also set one on the Response parameter?", "relevant": [{"file": "fastapi/routing.py", "lines": [379, 395]}]}

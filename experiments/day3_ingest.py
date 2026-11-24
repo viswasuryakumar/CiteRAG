@@ -1,6 +1,7 @@
 """Day 3, step 2: embed every chunk and store it in Postgres + pgvector.
 
-Needs: the database running (docker compose up -d) and data/chunks.jsonl (run day3_chunk.py first).
+Needs: the database running (docker compose up -d), data/chunks.jsonl (day3_chunk.py)
+       and data/code_chunks.jsonl (day8_code_chunk.py, optional).
 Run:   python experiments/day3_ingest.py
 """
 import json
@@ -13,7 +14,8 @@ from pgvector.psycopg import register_vector
 from sentence_transformers import SentenceTransformer
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
-CHUNKS_FILE = PROJECT_DIR / "data" / "chunks.jsonl"
+# Doc chunks (Day 3) and code chunks (Day 8). Both have the same fields.
+CHUNK_FILES = [PROJECT_DIR / "data" / "chunks.jsonl", PROJECT_DIR / "data" / "code_chunks.jsonl"]
 
 load_dotenv(PROJECT_DIR / ".env")
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://rag:rag@localhost:5432/rag")
@@ -29,7 +31,11 @@ def embedding_text(chunk: dict) -> str:
 
 
 def main() -> None:
-    chunks = [json.loads(line) for line in CHUNKS_FILE.open(encoding="utf-8")]
+    chunks = [
+        json.loads(line)
+        for path in CHUNK_FILES if path.exists()
+        for line in path.open(encoding="utf-8")
+    ]
 
     # 1. Embed all chunks in one call. Batching (64 at a time) is much faster than one by one.
     model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -71,7 +77,7 @@ def main() -> None:
             )
 
         # 5. Build the HNSW index after inserting: building once is faster than
-        #    updating the graph 1,649 times. vector_cosine_ops matches the <=> operator.
+        #    updating the graph once per row. vector_cosine_ops matches the <=> operator.
         conn.execute("CREATE INDEX ON chunks USING hnsw (embedding vector_cosine_ops)")
 
         count = conn.execute("SELECT count(*) FROM chunks").fetchone()[0]

@@ -1,6 +1,6 @@
 {
-  "recall_at_k": 0.92,
-  "mrr_at_k": 0.6413333333333333,
+  "recall_at_k": 0.8166666666666667,
+  "mrr_at_k": 0.5636111111111112,
   "k": 5,
   "rows": [
     {
@@ -27,7 +27,7 @@
     {
       "id": 4,
       "question": "How do I read a value from the URL, like the 5 in /items/5?",
-      "rank": 11,
+      "rank": 12,
       "hit": false,
       "reciprocal_rank": 0.0
     },
@@ -41,9 +41,9 @@
     {
       "id": 6,
       "question": "How do I force the client to always send a certain query parameter?",
-      "rank": 2,
+      "rank": 3,
       "hit": true,
-      "reciprocal_rank": 0.5
+      "reciprocal_rank": 0.3333333333333333
     },
     {
       "id": 7,
@@ -104,21 +104,21 @@
     {
       "id": 15,
       "question": "How do I read a cookie that the client sent?",
-      "rank": 4,
-      "hit": true,
-      "reciprocal_rank": 0.25
+      "rank": 7,
+      "hit": false,
+      "reciprocal_rank": 0.0
     },
     {
       "id": 16,
       "question": "How do I make sure the user's password is never included in what my endpoint returns?",
-      "rank": 2,
+      "rank": 1,
       "hit": true,
-      "reciprocal_rank": 0.5
+      "reciprocal_rank": 1.0
     },
     {
       "id": 17,
       "question": "How do I make my create endpoint respond with 201 instead of 200?",
-      "rank": 7,
+      "rank": 22,
       "hit": false,
       "reciprocal_rank": 0.0
     },
@@ -139,9 +139,9 @@
     {
       "id": 20,
       "question": "How do I run an API key check on every endpoint without repeating it everywhere?",
-      "rank": 5,
-      "hit": true,
-      "reciprocal_rank": 0.2
+      "rank": null,
+      "hit": false,
+      "reciprocal_rank": 0.0
     },
     {
       "id": 21,
@@ -174,9 +174,9 @@
     {
       "id": 25,
       "question": "In my tests, how do I swap the real database dependency for a fake one?",
-      "rank": 2,
+      "rank": 1,
       "hit": true,
-      "reciprocal_rank": 0.5
+      "reciprocal_rank": 1.0
     },
     {
       "id": 26,
@@ -230,7 +230,7 @@
     {
       "id": 33,
       "question": "How do I return an HTML page instead of JSON?",
-      "rank": 8,
+      "rank": 6,
       "hit": false,
       "reciprocal_rank": 0.0
     },
@@ -244,9 +244,9 @@
     {
       "id": 35,
       "question": "How do I set a cookie on the client from my endpoint?",
-      "rank": 1,
+      "rank": 2,
       "hit": true,
-      "reciprocal_rank": 1.0
+      "reciprocal_rank": 0.5
     },
     {
       "id": 36,
@@ -314,9 +314,9 @@
     {
       "id": 45,
       "question": "How do I set the title, description and version shown in the API docs?",
-      "rank": 1,
+      "rank": 2,
       "hit": true,
-      "reciprocal_rank": 1.0
+      "reciprocal_rank": 0.5
     },
     {
       "id": 46,
@@ -342,9 +342,9 @@
     {
       "id": 49,
       "question": "How do I update only the fields the client actually sent?",
-      "rank": 4,
+      "rank": 2,
       "hit": true,
-      "reciprocal_rank": 0.25
+      "reciprocal_rank": 0.5
     },
     {
       "id": 50,
@@ -352,6 +352,76 @@
       "rank": 1,
       "hit": true,
       "reciprocal_rank": 1.0
+    },
+    {
+      "id": 51,
+      "question": "In FastAPI's source, how does OAuth2PasswordBearer pull the token out of the request?",
+      "rank": 12,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 52,
+      "question": "What does FastAPI's code do when the Authorization header for HTTP Basic auth is malformed?",
+      "rank": 15,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 53,
+      "question": "Where in the FastAPI code is a plain def endpoint sent to a threadpool instead of being awaited?",
+      "rank": 6,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 54,
+      "question": "Which function in the FastAPI codebase decides whether a status code like 204 is allowed to have a response body?",
+      "rank": 5,
+      "hit": true,
+      "reciprocal_rank": 0.2
+    },
+    {
+      "id": 55,
+      "question": "How does FastAPI's built-in handler turn an HTTPException into a JSON response?",
+      "rank": 4,
+      "hit": true,
+      "reciprocal_rank": 0.25
+    },
+    {
+      "id": 56,
+      "question": "Where is the code that builds the default 422 response when request validation fails?",
+      "rank": 1,
+      "hit": true,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "id": 57,
+      "question": "How does BackgroundTasks store a function so it runs after the response is sent?",
+      "rank": 3,
+      "hit": true,
+      "reciprocal_rank": 0.3333333333333333
+    },
+    {
+      "id": 58,
+      "question": "What happens inside FastAPI when an API key is missing from the request?",
+      "rank": 7,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 59,
+      "question": "How does FastAPI's source generate the unique operation ID for each route?",
+      "rank": 3,
+      "hit": true,
+      "reciprocal_rank": 0.3333333333333333
+    },
+    {
+      "id": 60,
+      "question": "In FastAPI's code, how is the final status code of a response chosen when I also set one on the Response parameter?",
+      "rank": 21,
+      "hit": false,
+      "reciprocal_rank": 0.0
     }
   ]
 }

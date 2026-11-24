@@ -76,6 +76,16 @@ def main() -> None:
     print(f"  recall@{K} = {recall:.2f}")
     print(f"  MRR@{K}    = {mrr:.2f}")
 
+    # Split by question type: code questions are labelled with files under fastapi/, docs under docs/.
+    kinds = {item["id"]: "code" if item["relevant"][0]["file"].startswith("fastapi/") else "docs"
+             for item in items}
+    for kind in ("docs", "code"):
+        group = [r for r in rows if kinds[r["id"]] == kind]
+        if group:
+            print(f"  {kind:<5} ({len(group)} questions): "
+                  f"recall@{K} = {sum(r['hit'] for r in group) / len(group):.2f}, "
+                  f"MRR@{K} = {sum(r['reciprocal_rank'] for r in group) / len(group):.2f}")
+
     RESULTS_DIR.mkdir(exist_ok=True)
     out = RESULTS_DIR / f"{run_name}.json"
     out.write_text(json.dumps({"recall_at_k": recall, "mrr_at_k": mrr, "k": K, "rows": rows}, indent=2))

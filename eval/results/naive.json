@@ -1,6 +1,6 @@
 {
-  "recall_at_k": 0.76,
-  "mrr_at_k": 0.5989999999999999,
+  "recall_at_k": 0.7,
+  "mrr_at_k": 0.5102777777777776,
   "k": 5,
   "rows": [
     {
@@ -118,14 +118,14 @@
     {
       "id": 17,
       "question": "How do I make my create endpoint respond with 201 instead of 200?",
-      "rank": 44,
+      "rank": null,
       "hit": false,
       "reciprocal_rank": 0.0
     },
     {
       "id": 18,
       "question": "How do I reuse the same setup logic, like getting a DB session, across many endpoints?",
-      "rank": 44,
+      "rank": 41,
       "hit": false,
       "reciprocal_rank": 0.0
     },
@@ -139,7 +139,7 @@
     {
       "id": 20,
       "question": "How do I run an API key check on every endpoint without repeating it everywhere?",
-      "rank": 9,
+      "rank": 36,
       "hit": false,
       "reciprocal_rank": 0.0
     },
@@ -321,9 +321,9 @@
     {
       "id": 46,
       "question": "How do I mark an old endpoint as deprecated?",
-      "rank": 1,
-      "hit": true,
-      "reciprocal_rank": 1.0
+      "rank": null,
+      "hit": false,
+      "reciprocal_rank": 0.0
     },
     {
       "id": 47,
@@ -352,6 +352,76 @@
       "rank": 2,
       "hit": true,
       "reciprocal_rank": 0.5
+    },
+    {
+      "id": 51,
+      "question": "In FastAPI's source, how does OAuth2PasswordBearer pull the token out of the request?",
+      "rank": 35,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 52,
+      "question": "What does FastAPI's code do when the Authorization header for HTTP Basic auth is malformed?",
+      "rank": 23,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 53,
+      "question": "Where in the FastAPI code is a plain def endpoint sent to a threadpool instead of being awaited?",
+      "rank": 3,
+      "hit": true,
+      "reciprocal_rank": 0.3333333333333333
+    },
+    {
+      "id": 54,
+      "question": "Which function in the FastAPI codebase decides whether a status code like 204 is allowed to have a response body?",
+      "rank": 7,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 55,
+      "question": "How does FastAPI's built-in handler turn an HTTPException into a JSON response?",
+      "rank": 3,
+      "hit": true,
+      "reciprocal_rank": 0.3333333333333333
+    },
+    {
+      "id": 56,
+      "question": "Where is the code that builds the default 422 response when request validation fails?",
+      "rank": 3,
+      "hit": true,
+      "reciprocal_rank": 0.3333333333333333
+    },
+    {
+      "id": 57,
+      "question": "How does BackgroundTasks store a function so it runs after the response is sent?",
+      "rank": 3,
+      "hit": true,
+      "reciprocal_rank": 0.3333333333333333
+    },
+    {
+      "id": 58,
+      "question": "What happens inside FastAPI when an API key is missing from the request?",
+      "rank": 3,
+      "hit": true,
+      "reciprocal_rank": 0.3333333333333333
+    },
+    {
+      "id": 59,
+      "question": "How does FastAPI's source generate the unique operation ID for each route?",
+      "rank": 9,
+      "hit": false,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "id": 60,
+      "question": "In FastAPI's code, how is the final status code of a response chosen when I also set one on the Response parameter?",
+      "rank": null,
+      "hit": false,
+      "reciprocal_rank": 0.0
     }
   ]
 }
