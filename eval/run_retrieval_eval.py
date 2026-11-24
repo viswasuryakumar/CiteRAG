@@ -13,8 +13,21 @@ from pathlib import Path
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_DIR / "experiments"))
 
-# Run name -> the file whose retrieve() we measure.
-RETRIEVERS = {"naive": "day3_ask", "hybrid": "day6_hybrid", "hybrid_rerank": "day7_rerank"}
+# Run name -> "file:function" of the retriever we measure.
+RETRIEVERS = {
+    "naive": "day3_ask:retrieve",
+    "hybrid": "day6_hybrid:retrieve",
+    "hybrid_rerank": "day7_rerank:retrieve",
+    "rewrite": "day9_rewrite:retrieve",
+    "rewrite_rerank": "day9_rewrite:retrieve_rerank",
+}
+
+
+def load_retriever(run_name: str):
+    """'day6_hybrid:retrieve' -> the retrieve function from experiments/day6_hybrid.py."""
+    module_name, function_name = RETRIEVERS[run_name].split(":")
+    return getattr(importlib.import_module(module_name), function_name)
+
 
 GOLDEN_SET = PROJECT_DIR / "eval" / "golden_set.jsonl"
 RESULTS_DIR = PROJECT_DIR / "eval" / "results"
@@ -48,7 +61,7 @@ def first_correct_rank(retrieve, question: str, relevant: list[dict]) -> int | N
 
 def main() -> None:
     run_name = sys.argv[1] if len(sys.argv) > 1 else "naive"
-    retrieve = importlib.import_module(RETRIEVERS[run_name]).retrieve
+    retrieve = load_retriever(run_name)
     items = [json.loads(line) for line in GOLDEN_SET.open(encoding="utf-8")]
 
     rows = []

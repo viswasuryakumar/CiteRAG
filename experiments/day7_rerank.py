@@ -27,6 +27,11 @@ reranker = CrossEncoder("mixedbread-ai/mxbai-rerank-xsmall-v1")
 def retrieve(question: str, k: int = TOP_K) -> list[dict]:
     """Hybrid top 20 -> rerank with the cross-encoder -> return the top k."""
     candidates = hybrid_retrieve(question, k=max(k, RERANK_CANDIDATES))
+    return rerank(question, candidates, k)
+
+
+def rerank(question: str, candidates: list[dict], k: int) -> list[dict]:
+    """Rescore the first RERANK_CANDIDATES candidates with the cross-encoder, return the top k."""
     for hybrid_rank, chunk in enumerate(candidates, start=1):
         chunk["hybrid_rank"] = hybrid_rank
 

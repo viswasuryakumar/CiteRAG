@@ -22,8 +22,20 @@ from day3_ask import build_prompt, client, generate  # noqa: E402
 GOLDEN_SET = PROJECT_DIR / "eval" / "golden_set.jsonl"
 RESULTS_DIR = PROJECT_DIR / "eval" / "results"
 
-# Run name -> the file whose retrieve() feeds the answers.
-RETRIEVERS = {"naive": "day3_ask", "hybrid": "day6_hybrid", "hybrid_rerank": "day7_rerank"}
+# Run name -> "file:function" of the retriever that feeds the answers.
+RETRIEVERS = {
+    "naive": "day3_ask:retrieve",
+    "hybrid": "day6_hybrid:retrieve",
+    "hybrid_rerank": "day7_rerank:retrieve",
+    "rewrite": "day9_rewrite:retrieve",
+    "rewrite_rerank": "day9_rewrite:retrieve_rerank",
+}
+
+
+def load_retriever(run_name: str):
+    """'day6_hybrid:retrieve' -> the retrieve function from experiments/day6_hybrid.py."""
+    module_name, function_name = RETRIEVERS[run_name].split(":")
+    return getattr(importlib.import_module(module_name), function_name)
 
 # The judge. Using the same cheap model that wrote the answers keeps costs low, but a model
 # grading its own family can be lenient; swap in a stronger model here to compare.
@@ -59,7 +71,7 @@ def judge(question: str, chunks: list[dict], answer: str) -> list[dict]:
 def main() -> None:
     run_name = sys.argv[1] if len(sys.argv) > 1 else "naive"
     limit = int(sys.argv[2]) if len(sys.argv) > 2 else None
-    retrieve = importlib.import_module(RETRIEVERS[run_name]).retrieve
+    retrieve = load_retriever(run_name)
     items = [json.loads(line) for line in GOLDEN_SET.open(encoding="utf-8")][:limit]
 
     rows = []
