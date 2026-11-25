@@ -1,0 +1,2147 @@
+[
+  {
+    "id": 1,
+    "question": "How do I return a 404 error?",
+    "answerable": true,
+    "answer": "You return a 404 error by raising an `HTTPException` with a status code of `404` [5]. Because it is a Python exception, you `raise` it rather than `return` it [5]. Raising it ends the request right away and sends the HTTP error to the client [5].\n\nA 404 is a \"Not Found\" response, which falls in the 400 range for client errors [3].\n\nHere is an example that raises a 404 when an item doesn't exist [2]:\n\n```python\nfrom fastapi import FastAPI, HTTPException\n\napp = FastAPI()\n\nitems = {\"foo\": \"The Foo Wrestlers\"}\n\n\n@app.get(\"/items-header/{item_id}\")\nasync def read_item_header(item_id: str):\n    if item_id not in items:\n        raise HTTPException(\n            status_code=404,\n            detail=\"Item not found\",\n            headers={\"X-Error\": \"There goes my error\"},\n        )\n    return {\"item\": items[item_id]}\n```\n\nThe `headers` argument is optional and is shown for advanced cases where custom headers are needed [2].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/handling-errors.md",
+        "start_line": 74,
+        "end_line": 80,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/handling-errors.md#L74-L80"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/response-status-code.md",
+        "start_line": 62,
+        "end_line": 71,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/response-status-code.md#L62-L71"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/handling-errors.md",
+        "start_line": 32,
+        "end_line": 40,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/handling-errors.md#L32-L40"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 2,
+    "question": "How can I run something after the response has already been sent to the client?",
+    "answerable": true,
+    "answer": "You can use `BackgroundTasks` to run code after the response has been sent. Background tasks are defined to run *after* returning a response, for operations the client doesn't need to wait for [2]. You declare a parameter with the type `BackgroundTasks` in a *path operation function* or dependency function, and use it to schedule tasks after the response is sent [3]. You can import it with `from fastapi import BackgroundTasks` [3].\n\nTo schedule a task, call `background_tasks.add_task(...)` with the function and its arguments. The function can be a regular `def` function or an `async def` function [5]. The task runs in the background after the response is sent [5]. For example, a path operation can call `background_tasks.add_task(write_log, message)` and then return its response, and the messages are written to the log file after the response is sent [4].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/background-tasks.md",
+        "start_line": 3,
+        "end_line": 12,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/background-tasks.md#L3-L12"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/reference/background.md",
+        "start_line": 3,
+        "end_line": 11,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/reference/background.md#L3-L11"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/background-tasks.md",
+        "start_line": 55,
+        "end_line": 62,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/background-tasks.md#L55-L62"
+      },
+      {
+        "n": 5,
+        "file": "fastapi/background.py",
+        "start_line": 41,
+        "end_line": 62,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/background.py#L41-L62"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 3,
+    "question": "My React app on another domain gets blocked by the browser when it calls my API. How do I allow it?",
+    "answerable": true,
+    "answer": "Browsers block cross-origin requests by default, so your API must explicitly allow your React app's origin [2][3]. In FastAPI, you do this by adding `CORSMiddleware` to the app [4].\n\n```python\nfrom fastapi import FastAPI\nfrom fastapi.middleware.cors import CORSMiddleware\n\napp = FastAPI()\n\norigins = [\n    \"http://localhost.tiangolo.com\",\n    \"https://localhost.tiangolo.com\",\n    \"http://localhost\",\n    \"http://localhost:8080\",\n]\n\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=origins,\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)\n```\n\nReplace the entries in `origins` with the address where your React app runs [3][4]. If you set `allow_credentials` to `True`, then `allow_origins`, `allow_methods`, and `allow_headers` cannot be `['*']` and must be explicitly specified [1].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/cors.md",
+        "start_line": 62,
+        "end_line": 67,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/cors.md#L62-L67"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/cors.md",
+        "start_line": 52,
+        "end_line": 54,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/cors.md#L52-L54"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/cors.md",
+        "start_line": 19,
+        "end_line": 23,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/cors.md#L19-L23"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/cors.md",
+        "start_line": 49,
+        "end_line": 49,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/cors.md#L49-L49"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 4,
+    "question": "How do I read a value from the URL, like the 5 in /items/5?",
+    "answerable": true,
+    "answer": "You declare a path parameter by putting its name in curly braces in the route path, using the same syntax as Python format strings [3]. The value of that path parameter is passed to your function as the argument with the same name [3].\n\n```python\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id):\n    return {\"item_id\": item_id}\n```\n\nWith this code, going to `/items/foo` returns `{\"item_id\":\"foo\"}` [3]. For `/items/5`, the value passed would be `5` in the same way.\n\nYou can also declare the parameter as an `int`, as the example app does [4]. If the value is not an integer, such as `\"foo\"`, FastAPI returns an error because it cannot be parsed as an integer [5].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/path-params.md",
+        "start_line": 3,
+        "end_line": 13,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/path-params.md#L3-L13"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/index.md",
+        "start_line": 298,
+        "end_line": 301,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/index.md#L298-L301"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/path-params.md",
+        "start_line": 47,
+        "end_line": 65,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/path-params.md#L47-L65"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 5,
+    "question": "How do I make a query parameter optional?",
+    "answerable": true,
+    "answer": "You make a query parameter optional by giving it a default value, and `None` is the usual choice. For example, `q: str | None = None` makes `q` an optional query parameter that defaults to `None` [5]. Any default value, including `None`, makes the parameter optional rather than required [1]. Declaring the type as `str | None` without a default does not make it optional, because the parameter is still required [2].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/query-params-str-validations.md",
+        "start_line": 195,
+        "end_line": 197,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/query-params-str-validations.md#L195-L197"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/query-params-str-validations.md",
+        "start_line": 225,
+        "end_line": 227,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/query-params-str-validations.md#L225-L227"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/query-params.md",
+        "start_line": 62,
+        "end_line": 72,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/query-params.md#L62-L72"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 6,
+    "question": "How do I force the client to always send a certain query parameter?",
+    "answerable": true,
+    "answer": "To force a client to always send a query parameter, don't declare a default value for it. When you don't set a default, the parameter is required [2].\n\nFor example, in this path operation, `needy` is required:\n\n```python\n@app.get(\"/items/{item_id}\")\nasync def read_user_item(item_id: str, needy: str):\n    item = {\"item_id\": item_id, \"needy\": needy}\n    return item\n```\n\nHere the query parameter `needy` is a required query parameter of type `str` [2].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/query-params.md",
+        "start_line": 131,
+        "end_line": 141,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/query-params.md#L131-L141"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 7,
+    "question": "How do I limit how long a search string in the URL can be?",
+    "answerable": true,
+    "answer": "You can limit a query string's length by adding `max_length` to a `Query()` declaration. For example, with `Query(max_length=50)` inside `Annotated`, FastAPI gets additional validation that the value has a maximum of 50 characters [1]. Without `Annotated`, you can write `q: str | None = Query(default=None, max_length=50)` [3]. The `max_length` parameter applies to strings [4].\n\nEven when the parameter is optional, the limit is enforced whenever a value is provided [2]. FastAPI validates the data, shows a clear error to the client when the value is invalid [5], and documents the parameter in the OpenAPI schema [3][5].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/query-params-str-validations.md",
+        "start_line": 72,
+        "end_line": 80,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/query-params-str-validations.md#L72-L80"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/query-params-str-validations.md",
+        "start_line": 21,
+        "end_line": 21,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/query-params-str-validations.md#L21-L21"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/query-params-str-validations.md",
+        "start_line": 104,
+        "end_line": 123,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/query-params-str-validations.md#L104-L123"
+      },
+      {
+        "n": 4,
+        "file": "fastapi/param_functions.py",
+        "start_line": 521,
+        "end_line": 548,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/param_functions.py#L521-L548"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/query-params-str-validations.md",
+        "start_line": 82,
+        "end_line": 84,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/query-params-str-validations.md#L82-L84"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 8,
+    "question": "How can I accept several values for the same query parameter, like ?tag=a&tag=b?",
+    "answerable": true,
+    "answer": "You declare the parameter with `Query` and a list type. For example, `q: Annotated[list[str] | None, Query()] = None` lets `q` appear multiple times in the URL [1]:\n\n```python\nfrom typing import Annotated\n\nfrom fastapi import FastAPI, Query\n\napp = FastAPI()\n\n\n@app.get(\"/items/\")\nasync def read_items(q: Annotated[list[str] | None, Query()] = None):\n    query_items = {\"q\": q}\n    return query_items\n```\n\nWith a URL like `http://localhost:8000/items/?q=foo&q=bar`, the function receives the repeated values as a Python `list` in the parameter `q` [1][2]. For this URL, the response is `{\"q\": [\"foo\", \"bar\"]}` [2]. You must use `Query` explicitly for a list-typed query parameter, because otherwise FastAPI interprets it as a request body [2]. The interactive API docs also update to allow multiple values [2].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/query-params-str-validations.md",
+        "start_line": 241,
+        "end_line": 251,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/query-params-str-validations.md#L241-L251"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/query-params-str-validations.md",
+        "start_line": 253,
+        "end_line": 274,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/query-params-str-validations.md#L253-L274"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 9,
+    "question": "How do I reject an item ID in the path if it's zero or negative?",
+    "answerable": true,
+    "answer": "You can declare the path parameter with `Path` and a number constraint. Using `ge=1` requires `item_id` to be an integer greater than or equal to 1, which rejects zero and negative values [2]. Alternatively, `gt` means \"greater than,\" so `gt=0` also constrains the value to be above zero [1].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/path-params-numeric-validations.md",
+        "start_line": 104,
+        "end_line": 109,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/path-params-numeric-validations.md#L104-L109"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/path-params-numeric-validations.md",
+        "start_line": 96,
+        "end_line": 100,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/path-params-numeric-validations.md#L96-L100"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 10,
+    "question": "How do I accept JSON data in a POST request?",
+    "answerable": true,
+    "answer": "In the excerpts, a POST endpoint receives JSON by declaring a parameter typed with a Pydantic model, such as `def post_data(body: DataInput)` in a `@app.post(\"/data\")` path operation [2]. The `DataInput` model is a `BaseModel` with `description: str` and `data: bytes` fields [2]. The `/data-in-out` example uses the same pattern with a model as the body parameter [3].\n\nDo not combine JSON body fields with `File` and `Form` parameters in the same path operation. The request body is encoded as `multipart/form-data` instead of `application/json`, which is part of the HTTP protocol [5].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 2,
+        "file": "docs/en/docs/advanced/json-base64-bytes.md",
+        "start_line": 19,
+        "end_line": 19,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/json-base64-bytes.md#L19-L19"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/advanced/json-base64-bytes.md",
+        "start_line": 57,
+        "end_line": 57,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/json-base64-bytes.md#L57-L57"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/request-files.md",
+        "start_line": 124,
+        "end_line": 134,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/request-files.md#L124-L134"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 11,
+    "question": "How do I receive data from an HTML form instead of JSON?",
+    "answerable": true,
+    "answer": "You can receive form fields instead of JSON by using `Form` [5]. To use forms, you first need to install `python-multipart` [5].\n\nHTML forms send data using a different encoding than JSON, and **FastAPI** reads that data from the right place instead of JSON [3]. Form data is normally encoded as `application/x-www-form-urlencoded` when it doesn't include files [3].\n\nYou can't also declare `Body` fields that expect JSON in the same *path operation*, because the request body is encoded as form data rather than `application/json` [2].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/request-forms.md",
+        "start_line": 69,
+        "end_line": 79,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/request-forms.md#L69-L79"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/request-forms.md",
+        "start_line": 57,
+        "end_line": 67,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/request-forms.md#L57-L67"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/request-forms.md",
+        "start_line": 3,
+        "end_line": 15,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/request-forms.md#L3-L15"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 12,
+    "question": "How can users upload a file to my API?",
+    "answerable": true,
+    "answer": "Users upload files to your API through a path operation that declares a file parameter. Import `File` and `UploadFile` from `fastapi` [1]. Declare the parameter with the type `UploadFile` [3], for example `file: UploadFile` [1]. Then read the name with `file.filename` [1].\n\nYou can also declare the parameter as `Annotated[bytes, File()]` to receive the file contents as bytes [1]. Use `File()` with `UploadFile` to set extra metadata, such as a `description` [4].\n\nTo accept several files in the same form field, declare a list of `bytes` or `UploadFile` [2], such as `Annotated[list[bytes], File()]` or `list[UploadFile]` [5].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/request-files.md",
+        "start_line": 21,
+        "end_line": 23,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/request-files.md#L21-L23"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/request-files.md",
+        "start_line": 150,
+        "end_line": 154,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/request-files.md#L150-L154"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/request-files.md",
+        "start_line": 55,
+        "end_line": 59,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/request-files.md#L55-L59"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/request-files.md",
+        "start_line": 144,
+        "end_line": 146,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/request-files.md#L144-L146"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/request-files.md",
+        "start_line": 156,
+        "end_line": 156,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/request-files.md#L156-L156"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 13,
+    "question": "How can a client upload several files in one request?",
+    "answerable": true,
+    "answer": "Several files can be uploaded at the same time, and they are all associated with the same \"form field\" sent using form data [1]. To accept them, declare a list of `bytes` or `UploadFile` [1]. For example, an endpoint can declare `files: Annotated[list[bytes], File()]` or `files: list[UploadFile]` [2]. A client can send them from an HTML form that uses `enctype=\"multipart/form-data\"` and an `<input name=\"files\" type=\"file\" multiple>` element [4].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/request-files.md",
+        "start_line": 150,
+        "end_line": 154,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/request-files.md#L150-L154"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/request-files.md",
+        "start_line": 156,
+        "end_line": 156,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/request-files.md#L156-L156"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/request-files.md",
+        "start_line": 172,
+        "end_line": 172,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/request-files.md#L172-L172"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 14,
+    "question": "How do I read the User-Agent sent by the browser?",
+    "answerable": true,
+    "answer": "You can read it with a `Header` parameter. First import `Header` from `fastapi`, then declare the parameter with `Annotated[str | None, Header()] = None`, as in the example that returns it in the response [1]. By default, `Header` converts underscores in the parameter name to hyphens, so `user_agent` reads the `user-agent` header [2]. Because HTTP headers are case-insensitive, you can use the snake_case name in Python code [2].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/header-params.md",
+        "start_line": 7,
+        "end_line": 9,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/header-params.md#L7-L9"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/header-params.md",
+        "start_line": 35,
+        "end_line": 45,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/header-params.md#L35-L45"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 15,
+    "question": "How do I read a cookie that the client sent?",
+    "answerable": true,
+    "answer": "You read a cookie by declaring a function parameter with `Cookie()` in its type annotation. In the example, `ads_id` is typed as `str | None` with `Cookie()` and defaults to `None`, and the function returns it [5]. You need `Cookie` because otherwise the parameter would be interpreted as a query parameter [4].\n\nTo read several cookies, declare a Pydantic model with one field per cookie and annotate the parameter with `Cookie()`. FastAPI extracts the data for each field from the cookies in the request and gives you the model [2].\n\nIf you want to reject unexpected cookies, set `model_config = {\"extra\": \"forbid\"}` on the model. A client that sends extra cookies then receives an error response [3].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/cookie-param-models.md",
+        "start_line": 21,
+        "end_line": 25,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/cookie-param-models.md#L21-L25"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/cookie-param-models.md",
+        "start_line": 53,
+        "end_line": 55,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/cookie-param-models.md#L53-L55"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/cookie-params.md",
+        "start_line": 27,
+        "end_line": 41,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/cookie-params.md#L27-L41"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/cookie-params.md",
+        "start_line": 7,
+        "end_line": 9,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/cookie-params.md#L7-L9"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 16,
+    "question": "How do I make sure the user's password is never included in what my endpoint returns?",
+    "answerable": true,
+    "answer": "Use a separate output model that does not contain the password, and declare it as the `response_model` of your path operation. The example creates an input model `UserIn` with the plaintext password and an output model `UserOut` without it [1]. The endpoint is declared with `@app.post(\"/user/\", response_model=UserOut)` [5]. The docs state that the `response_model` is `UserOut`, which doesn't include the password [5].\n\nDon't reuse the input model as the output model. In the anti-pattern, the same `UserIn` model is used for both input and output, so the response returns the password [2]. That is acceptable only when the same user is sending the password, and sharing that model across other path operations could expose passwords to every client [3]. The docs also warn never to store or send a plain password in a response unless you know the caveats [3].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/response-model.md",
+        "start_line": 111,
+        "end_line": 115,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/response-model.md#L111-L115"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/response-model.md",
+        "start_line": 87,
+        "end_line": 99,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/response-model.md#L87-L99"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/response-model.md",
+        "start_line": 101,
+        "end_line": 107,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/response-model.md#L101-L107"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/response-model.md",
+        "start_line": 117,
+        "end_line": 119,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/response-model.md#L117-L119"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 17,
+    "question": "How do I make my create endpoint respond with 201 instead of 200?",
+    "answerable": true,
+    "answer": "To make your create endpoint respond with 201, set `status_code` in the decorator. For example, `@app.post(\"/items/\", status_code=201)` [4]. This parameter belongs to the decorator method, not to the path operation function [4].\n\nIf the status code should depend on runtime logic, you can declare a `Response` parameter in your path operation function and set its `status_code`. In the example, the endpoint keeps the default 200 but sets `response.status_code = status.HTTP_201_CREATED` when it creates a new task [5]. Status `201`, \"Created,\" is commonly used after creating a new record in the database [1].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/response-status-code.md",
+        "start_line": 56,
+        "end_line": 61,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/response-status-code.md#L56-L61"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/response-status-code.md",
+        "start_line": 3,
+        "end_line": 17,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/response-status-code.md#L3-L17"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/advanced/response-change-status-code.md",
+        "start_line": 19,
+        "end_line": 23,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/response-change-status-code.md#L19-L23"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 18,
+    "question": "How do I reuse the same setup logic, like getting a DB session, across many endpoints?",
+    "answerable": true,
+    "answer": "You can write a dependency with `yield` that provides a new `Session` for each request, which ensures a single session per request [1]. Then you can create an `Annotated` alias, such as `SessionDep`, to simplify using that dependency in the rest of your code [1]. Dependencies are meant for shared logic and sharing database connections, and they minimize code repetition [4].\n\nIf you also need to limit how many requests use the dependency at once, you can add `max_concurrency` to `Depends()` [2]. Routes that reuse the same `Depends()` object share that limit, while a new `Depends(get_session, max_concurrency=5)` for each route gives each route its own limit [3].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/sql-databases.md",
+        "start_line": 94,
+        "end_line": 98,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/sql-databases.md#L94-L98"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/advanced/advanced-dependencies.md",
+        "start_line": 69,
+        "end_line": 83,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/advanced-dependencies.md#L69-L83"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/advanced/advanced-dependencies.md",
+        "start_line": 91,
+        "end_line": 101,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/advanced-dependencies.md#L91-L101"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/dependencies/index.md",
+        "start_line": 9,
+        "end_line": 20,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/dependencies/index.md#L9-L20"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 19,
+    "question": "How do I close the database connection after each request is done?",
+    "answerable": true,
+    "answer": "You can create a dependency with `yield` that opens the database session, yields it, and closes it in a `finally` block. The code before `yield` runs before the response is created, and the code after `yield` runs after the response [1]. For example, `get_db()` creates `DBSession()`, yields `db` inside a `try`, and calls `db.close()` in the `finally` block [1].\n\nThe SQL database tutorial uses this pattern to provide a new `Session` for each request, which ensures a single session per request [4].\n\nBy default, the exit code of a dependency with `yield` runs after the response is sent to the client. If you won't need the dependency after the *path operation function* returns, you can use `Depends(scope=\"function\")` so it closes after the function returns but before the response is sent [5].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/dependencies/dependencies-with-yield.md",
+        "start_line": 28,
+        "end_line": 44,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/dependencies/dependencies-with-yield.md#L28-L44"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/sql-databases.md",
+        "start_line": 94,
+        "end_line": 98,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/sql-databases.md#L94-L98"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/dependencies/dependencies-with-yield.md",
+        "start_line": 189,
+        "end_line": 191,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/dependencies/dependencies-with-yield.md#L189-L191"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 20,
+    "question": "How do I run an API key check on every endpoint without repeating it everywhere?",
+    "answerable": true,
+    "answer": "I don't know based on the FastAPI docs and code.",
+    "abstained": true,
+    "sources": [],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 21,
+    "question": "My main.py is getting huge. How do I split my endpoints into several files?",
+    "answerable": true,
+    "answer": "You can move related endpoints into separate modules, such as `app/routers/users.py` and `app/routers/items.py`, and give each module its own `APIRouter`. The `users.router` object is the `APIRouter` inside `app/routers/users.py`, and `items.router` is the one inside `app/routers/items.py` [2].\n\nBecause these modules are submodules of the same `app` package, you can import them with a relative import using a single dot `.` [4].\n\nCommon settings shared by a module's endpoints, such as a path prefix, tags, extra responses, and dependencies, can go on the `APIRouter` instead of being repeated on every path operation [3].\n\nFinally, call `app.include_router()` to add each `APIRouter` to the main `FastAPI` application, which includes all of that router's routes [2]. FastAPI keeps the original `APIRouter` and its routes active after inclusion [2].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/bigger-applications.md",
+        "start_line": 386,
+        "end_line": 406,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/bigger-applications.md#L386-L406"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/bigger-applications.md",
+        "start_line": 132,
+        "end_line": 150,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/bigger-applications.md#L132-L150"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/bigger-applications.md",
+        "start_line": 315,
+        "end_line": 315,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/bigger-applications.md#L315-L315"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 22,
+    "question": "How do I measure how long every request takes to process?",
+    "answerable": true,
+    "answer": "You can measure request processing time with an HTTP middleware. Middleware is a function that runs for every request before any *path operation* receives it, and again after the response is generated [4][1]. Record a start time before `call_next(request)`, compute the elapsed time after it returns, and add the result as a response header [1][2]:\n\n```python\nimport time\n\nfrom fastapi import FastAPI, Request\n\napp = FastAPI()\n\n\n@app.middleware(\"http\")\nasync def add_process_time_header(request: Request, call_next):\n    start_time = time.perf_counter()\n    response = await call_next(request)\n    process_time = time.perf_counter() - start_time\n    response.headers[\"X-Process-Time\"] = str(process_time)\n    return response\n```\n\nThe `@app.middleware(\"http\")` decorator registers the function with `BaseHTTPMiddleware` as its dispatch function [5]. The docstring for that decorator uses `time.time()` instead of `time.perf_counter()` [3][5]. The tutorial uses `time.perf_counter()` [1][2]. The excerpts don't say which is preferable.",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/middleware.md",
+        "start_line": 54,
+        "end_line": 62,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/middleware.md#L54-L62"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/middleware.md",
+        "start_line": 34,
+        "end_line": 38,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/middleware.md#L34-L38"
+      },
+      {
+        "n": 3,
+        "file": "fastapi/applications.py",
+        "start_line": 4725,
+        "end_line": 4756,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/applications.py#L4725-L4756"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/middleware.md",
+        "start_line": 3,
+        "end_line": 16,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/middleware.md#L3-L16"
+      },
+      {
+        "n": 5,
+        "file": "fastapi/applications.py",
+        "start_line": 4757,
+        "end_line": 4769,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/applications.py#L4757-L4769"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 23,
+    "question": "How do I serve images and CSS files from a folder?",
+    "answerable": true,
+    "answer": "You can use the `StaticFiles` class to serve static files such as JavaScript, CSS, and images [1]. Import it from `fastapi.staticfiles` [1]. Then \"mount\" a `StaticFiles()` instance at a path [2]. For example, with a `static` directory:\n\n```python\nfrom fastapi import FastAPI\nfrom fastapi.staticfiles import StaticFiles\n\napp = FastAPI()\n\napp.mount(\"/static\", StaticFiles(directory=\"static\"), name=\"static\")\n```\n[5]\n\nFiles mounted this way are served automatically by the application [4]. For example, a CSS file at `static/styles.css` would be served at `/static/styles.css` [4]. If you need to host a frontend, `app.frontend()` is recommended instead, since it uses `StaticFiles` underneath and adds features like handling client-side routing [3].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/reference/staticfiles.md",
+        "start_line": 3,
+        "end_line": 13,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/reference/staticfiles.md#L3-L13"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/how-to/custom-docs-ui-assets.md",
+        "start_line": 118,
+        "end_line": 119,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/how-to/custom-docs-ui-assets.md#L118-L119"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/static-files.md",
+        "start_line": 3,
+        "end_line": 11,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/static-files.md#L3-L11"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/advanced/templates.md",
+        "start_line": 136,
+        "end_line": 148,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/templates.md#L136-L148"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/how-to/custom-docs-ui-assets.md",
+        "start_line": 179,
+        "end_line": 179,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/how-to/custom-docs-ui-assets.md#L179-L179"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 24,
+    "question": "How do I write automated tests for my endpoints?",
+    "answerable": true,
+    "answer": "You can write tests with the `TestClient` that FastAPI provides. It comes from Starlette, and FastAPI exposes it as `fastapi.testclient` for convenience [1]. Import it, create a client from your app, and write test functions that call endpoints through the client. For example, `client = TestClient(app)` followed by `response = client.get(\"/\")` and assertions on `response.status_code` and `response.json()` [2].\n\nIn a real application, you would probably keep your tests in a separate file, and your FastAPI application might be split across several files or modules [5].\n\nIf a test needs to call `async` functions, such as asynchronous database functions, the test function itself must be asynchronous. AnyIO provides a plugin for marking such test functions [4]. This is useful when you want to send a request and then verify asynchronously that the backend wrote the correct data to the database [3]. The docs cover this in the Async Tests section of the advanced tutorial [1].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/testing.md",
+        "start_line": 47,
+        "end_line": 57,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/testing.md#L47-L57"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/testing.md",
+        "start_line": 95,
+        "end_line": 98,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/testing.md#L95-L98"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/advanced/async-tests.md",
+        "start_line": 3,
+        "end_line": 7,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/async-tests.md#L3-L7"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/advanced/async-tests.md",
+        "start_line": 11,
+        "end_line": 11,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/async-tests.md#L11-L11"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/testing.md",
+        "start_line": 61,
+        "end_line": 63,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/testing.md#L61-L63"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 25,
+    "question": "In my tests, how do I swap the real database dependency for a fake one?",
+    "answerable": true,
+    "answer": "The excerpts describe the concept but not the full code. You can override a dependency during testing with a different dependency that is used only in tests and provides a value where the original's value was used [1]. The override works even when the original dependency is used in a path operation function, a path operation decorator, or an `.include_router()` call [3]. The excerpts's example is an external authentication provider, but the same approach applies to a database dependency [2].\n\nTo reset overrides after tests, set `app.dependency_overrides` to an empty `dict` [3]. If you only want the override in some tests, set it at the beginning of the test function and reset it at the end [3].\n\nThe excerpts don't show the exact statement that registers the fake database dependency in `app.dependency_overrides`, so I can't give you that line from these sources.",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/advanced/testing-dependencies.md",
+        "start_line": 5,
+        "end_line": 9,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/testing-dependencies.md#L5-L9"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/advanced/testing-dependencies.md",
+        "start_line": 13,
+        "end_line": 21,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/testing-dependencies.md#L13-L21"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/advanced/testing-dependencies.md",
+        "start_line": 37,
+        "end_line": 53,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/testing-dependencies.md#L37-L53"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 26,
+    "question": "How do I build a login where users send a username and password and get a token back?",
+    "answerable": true,
+    "answer": "You can add a `POST /token` endpoint that takes the username and password as form data, checks them, and returns a token. The endpoint declares its input as `form_data: Annotated[OAuth2PasswordRequestForm, Depends()]` and returns a `Token` [1]. It calls `authenticate_user(fake_users_db, form_data.username, form_data.password)` to check the credentials [1].\n\nIf no user is returned, the endpoint raises an `HTTPException` with status 401, the detail \"Incorrect username or password\", and a `WWW-Authenticate: Bearer` header [1].\n\nAfter authentication, the endpoint sets the token lifetime with `access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)` [1]. It then creates the token with `create_access_token`, using data that includes the username as `\"sub\": user.username` [5]. The excerpts cut off before the final return statement, so they don't show exactly how the token is sent back in the response [1].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/security/oauth2-jwt.md",
+        "start_line": 159,
+        "end_line": 159,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/security/oauth2-jwt.md#L159-L159"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/advanced/security/oauth2-scopes.md",
+        "start_line": 101,
+        "end_line": 101,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/security/oauth2-scopes.md#L101-L101"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 27,
+    "question": "How should I store user passwords safely?",
+    "answerable": true,
+    "answer": "You should never store plaintext passwords. Instead, store a secure hash that you can later verify [4]. Hashing converts the password into a string that can't be converted back into the password [2]. The FastAPI tutorial uses the pwdlib library, creating a `PasswordHash.recommended()` instance for hashing and verifying passwords [1][3]. Its `get_password_hash` function calls `password_hash.hash(password)`, and its `verify_password` function calls `password_hash.verify(...)` [3]. For new hashes, the pwdlib tip recommends Argon2 or Bcrypt, and passlib is recommended only for working with legacy hashes [1].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/security/oauth2-jwt.md",
+        "start_line": 99,
+        "end_line": 117,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/security/oauth2-jwt.md#L99-L117"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/security/simple-oauth2.md",
+        "start_line": 107,
+        "end_line": 123,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/security/simple-oauth2.md#L107-L123"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/security/oauth2-jwt.md",
+        "start_line": 119,
+        "end_line": 119,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/security/oauth2-jwt.md#L119-L119"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/extra-models.md",
+        "start_line": 3,
+        "end_line": 17,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/extra-models.md#L3-L17"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 28,
+    "question": "How do I create and check JWT tokens?",
+    "answerable": true,
+    "answer": "The excerpts describe JWTs as a standard for encoding a JSON object in a compact string. The contents are not encrypted, but the token is signed, so a token you issued can be verified as yours [2]. The tutorial includes a step to create a utility function that generates a new access token [5]. For checking tokens, the `get_current_user` dependency should receive the token, decode it, verify it, and return the current user. If the token is invalid, it should return an HTTP error immediately [3].\n\nThe excerpts do not include the actual code for creating or decoding tokens, so I can't show the specific functions, libraries, or arguments to use.",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/security/oauth2-jwt.md",
+        "start_line": 11,
+        "end_line": 21,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/security/oauth2-jwt.md#L11-L21"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/security/oauth2-jwt.md",
+        "start_line": 163,
+        "end_line": 167,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/security/oauth2-jwt.md#L163-L167"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/security/oauth2-jwt.md",
+        "start_line": 157,
+        "end_line": 157,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/security/oauth2-jwt.md#L157-L157"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 29,
+    "question": "Inside an endpoint, how do I get the user who is currently logged in?",
+    "answerable": true,
+    "answer": "You can create a dependency that gets the user from the token. The security scheme passes the token to a function like `get_current_user`, which decodes it and returns the user [3][4]. That function raises a 401 error if the token doesn't produce a user [1][5].\n\nFor an endpoint that should only serve active users, add `get_current_active_user`, which uses `get_current_user` as a dependency and raises an error if the user is disabled [1][5]. Using it means the endpoint only receives a user who exists, is authenticated, and is active [2]. The endpoint gets the user by declaring a parameter annotated with `Depends(...)` on that dependency, as shown in the `current_user: Annotated[User, Depends(get_current_user)]` pattern [1].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/security/simple-oauth2.md",
+        "start_line": 55,
+        "end_line": 55,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/security/simple-oauth2.md#L55-L55"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/security/simple-oauth2.md",
+        "start_line": 187,
+        "end_line": 195,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/security/simple-oauth2.md#L187-L195"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/security/get-current-user.md",
+        "start_line": 3,
+        "end_line": 9,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/security/get-current-user.md#L3-L9"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/security/get-current-user.md",
+        "start_line": 41,
+        "end_line": 41,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/security/get-current-user.md#L41-L41"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/security/simple-oauth2.md",
+        "start_line": 171,
+        "end_line": 171,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/security/simple-oauth2.md#L171-L171"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 30,
+    "question": "How do I connect my app to a SQL database?",
+    "answerable": true,
+    "answer": "FastAPI doesn't require a SQL database, but you can use any database you want. The docs show an example using SQLModel, which is built on SQLAlchemy and Pydantic [2].\n\nCreate an engine with `create_engine`. The example builds a SQLite URL (`sqlite_url = f\"sqlite:///{sqlite_file_name}\"`) and passes it to `create_engine(sqlite_url, connect_args=connect_args)` [3]. The engine holds the connections to the database, and you would have one single engine object for all your code to connect to the same database [1].\n\nUse a `Session` for each request. A `Session` stores the objects in memory, tracks the changes needed in the data, and uses the engine to communicate with the database [5]. The example creates a FastAPI dependency with `yield` that provides a new `Session` for each request, ensuring a single session per request [5]. It then wraps this in an `Annotated` dependency called `SessionDep` to simplify the rest of the code [5].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/sql-databases.md",
+        "start_line": 76,
+        "end_line": 78,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/sql-databases.md#L76-L78"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/sql-databases.md",
+        "start_line": 3,
+        "end_line": 9,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/sql-databases.md#L3-L9"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/sql-databases.md",
+        "start_line": 100,
+        "end_line": 100,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/sql-databases.md#L100-L100"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/sql-databases.md",
+        "start_line": 94,
+        "end_line": 98,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/sql-databases.md#L94-L98"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 31,
+    "question": "How do I load a machine learning model once when the app starts and free it when it stops?",
+    "answerable": true,
+    "answer": "Use a `lifespan` function, an async context manager that you pass to `FastAPI`. The code before its `yield` runs during startup, before the application starts taking requests [1]. The code after the `yield` runs after the application finishes handling requests, right before shutdown, and can release resources such as memory or a GPU [1].\n\nIn the example, the model is loaded into a dictionary before the `yield`, and the dictionary is cleared after it [2]. The lifespan function is attached with `app = FastAPI(lifespan=lifespan)` [2].\n\n```python\nfrom contextlib import asynccontextmanager\n\nfrom fastapi import FastAPI\n\n\ndef fake_answer_to_everything_ml_model(x: float):\n    return x * 42\n\n\nml_models = {}\n\n\n@asynccontextmanager\nasync def lifespan(app: FastAPI):\n    # Load the ML model\n    ml_models[\"answer_to_everything\"] = fake_answer_to_everything_ml_model\n    yield\n    # Clean up the ML models and release the resources\n    ml_models.clear()\n\n\napp = FastAPI(lifespan=lifespan)\n\n\n@app.get(\"/predict\")\nasync def predict(x: float):\n    result = ml_models[\"answer_to_everything\"](x)\n    return {\"result\": result}\n```",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/advanced/events.md",
+        "start_line": 35,
+        "end_line": 45,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/events.md#L35-L45"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/advanced/events.md",
+        "start_line": 85,
+        "end_line": 85,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/events.md#L85-L85"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 32,
+    "question": "How do I read configuration from environment variables or a .env file?",
+    "answerable": true,
+    "answer": "Environment variables are values that live outside your Python code, in the operating system, and your application can read them [4]. Pydantic provides a utility for handling settings that come from environment variables [5]. Pydantic can also read from dotenv (`.env`) files through an external library, and for this to work you add `python-dotenv` to your project with `uv add python-dotenv` [3].\n\nTo use a `.env` file, define the `env_file` config inside your Pydantic `Settings` class and set it to the filename of the dotenv file you want to use [1]. For example:\n\n```python\nfrom pydantic_settings import BaseSettings, SettingsConfigDict\n\n\nclass Settings(BaseSettings):\n    app_name: str = \"Awesome API\"\n    admin_email: str\n    items_per_user: int = 50\n\n    model_config = SettingsConfigDict(env_file=\".env\")\n```\n\nThe `model_config` attribute is used for Pydantic configuration [2].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/advanced/settings.md",
+        "start_line": 228,
+        "end_line": 228,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/settings.md#L228-L228"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/advanced/settings.md",
+        "start_line": 218,
+        "end_line": 226,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/settings.md#L218-L226"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/advanced/settings.md",
+        "start_line": 199,
+        "end_line": 205,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/settings.md#L199-L205"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/environment-variables.md",
+        "start_line": 3,
+        "end_line": 7,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/environment-variables.md#L3-L7"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/advanced/settings.md",
+        "start_line": 27,
+        "end_line": 27,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/settings.md#L27-L27"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 33,
+    "question": "How do I return an HTML page instead of JSON?",
+    "answerable": true,
+    "answer": "To return an HTML page instead of JSON, import `HTMLResponse` and pass it as the `response_class` parameter of your path operation decorator [2]. The `response_class` parameter also defines the response's media type [2].\n\nYou can also return an `HTMLResponse` object directly from the path operation, setting the content and status code yourself [3].\n\nTo return HTML from every path operation by default, set `default_response_class=HTMLResponse` when creating the `FastAPI` or `APIRouter` instance. You can still override `response_class` in individual path operations [4].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 2,
+        "file": "docs/en/docs/advanced/custom-response.md",
+        "start_line": 37,
+        "end_line": 46,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/custom-response.md#L37-L46"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/advanced/custom-response.md",
+        "start_line": 56,
+        "end_line": 62,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/custom-response.md#L56-L62"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/advanced/custom-response.md",
+        "start_line": 257,
+        "end_line": 269,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/custom-response.md#L257-L269"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 34,
+    "question": "How do I send a big response bit by bit instead of all at once?",
+    "answerable": true,
+    "answer": "You can use `response_class=StreamingResponse` in your *path operation function* and then use `yield` to send each chunk of data in turn [1]. This approach is useful for large binary files, where each chunk is streamed as it is read, without reading the whole file into memory at once [3]. For files, you can open the file in a `with` block and `yield` each chunk [5]. The `with` block ensures the file-like object is closed after the generator function finishes, which is after it finishes sending the response [5].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/advanced/stream-data.md",
+        "start_line": 23,
+        "end_line": 23,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/stream-data.md#L23-L23"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/advanced/stream-data.md",
+        "start_line": 15,
+        "end_line": 19,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/stream-data.md#L15-L19"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/advanced/stream-data.md",
+        "start_line": 71,
+        "end_line": 81,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/stream-data.md#L71-L81"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 35,
+    "question": "How do I set a cookie on the client from my endpoint?",
+    "answerable": true,
+    "answer": "You can declare a parameter of type `Response` in your *path operation function* and set the cookie on that object. [2] Then you can return any object you need as usual, such as a `dict`. [2]\n\n```python\nfrom fastapi import FastAPI, Response\n\napp = FastAPI()\n\n\n@app.post(\"/cookie-and-object/\")\ndef create_cookie(response: Response):\n    response.set_cookie(key=\"fakesession\", value=\"fake-cookie-session-value\")\n    return {\"message\": \"Come to the dark side, we have cookies\"}\n```\n\n[2]\n\nYou can also create a response directly, set the cookie on it, and return that response. [1] For example, you can create a `JSONResponse`, call `response.set_cookie(...)` on it, and return it. [1]\n\nTo see all the available parameters and options for `set_cookie`, check the Starlette documentation. [4]",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/advanced/response-cookies.md",
+        "start_line": 21,
+        "end_line": 31,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/response-cookies.md#L21-L31"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/advanced/response-cookies.md",
+        "start_line": 5,
+        "end_line": 13,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/response-cookies.md#L5-L13"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/advanced/response-cookies.md",
+        "start_line": 41,
+        "end_line": 51,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/response-cookies.md#L41-L51"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 36,
+    "question": "How do I add my own header to a response?",
+    "answerable": true,
+    "answer": "You can add your own header by creating a response, such as a `JSONResponse`, and passing a headers dictionary as an additional parameter [3]. The `Response` class accepts a `headers` parameter that takes a `dict` of strings [1].\n\nYou can also declare a parameter of type `Response` in a *path operation function* or dependency and set headers on it [4]. FastAPI uses that temporary response to extract the headers and puts them in the final response [5].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/advanced/custom-response.md",
+        "start_line": 110,
+        "end_line": 121,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/custom-response.md#L110-L121"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/advanced/response-headers.md",
+        "start_line": 21,
+        "end_line": 29,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/response-headers.md#L21-L29"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/reference/response.md",
+        "start_line": 3,
+        "end_line": 15,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/reference/response.md#L3-L15"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/advanced/response-headers.md",
+        "start_line": 15,
+        "end_line": 17,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/response-headers.md#L15-L17"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 37,
+    "question": "How do I build a live chat where the server pushes messages to the browser over one open connection?",
+    "answerable": true,
+    "answer": "You can build this with a WebSocket endpoint declared using the `@app.websocket` decorator. The endpoint calls `await websocket.accept()`, then sends messages with `await websocket.send_text(...)` [4][5]:\n\n```python\nfrom fastapi import FastAPI, WebSocket\n\napp = FastAPI()\n\n@app.websocket(\"/ws\")\nasync def websocket_endpoint(websocket: WebSocket):\n    await websocket.accept()\n    while True:\n        data = await websocket.receive_text()\n        await websocket.send_text(f\"Message text was: {data}\")\n```\n\nThe `WebSocket` class provides methods including `send_text`, `send_json`, `receive_text`, and `close` [3]. The tutorial's chat example serves an HTML page whose JavaScript opens `ws://localhost:8000/ws` and handles incoming messages with `ws.onmessage` [1]. The docs state that all messages in such a session use the same WebSocket connection [2].\n\nThe excerpts don't show the server pushing messages without first receiving one. The example loop waits on `receive_text()` before each `send_text()` [4].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/advanced/websockets.md",
+        "start_line": 61,
+        "end_line": 61,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/websockets.md#L61-L61"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/advanced/websockets.md",
+        "start_line": 87,
+        "end_line": 97,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/websockets.md#L87-L97"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/reference/websockets.md",
+        "start_line": 19,
+        "end_line": 47,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/reference/websockets.md#L19-L47"
+      },
+      {
+        "n": 4,
+        "file": "fastapi/applications.py",
+        "start_line": 1453,
+        "end_line": 1475,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/applications.py#L1453-L1475"
+      },
+      {
+        "n": 5,
+        "file": "fastapi/routing.py",
+        "start_line": 3195,
+        "end_line": 3220,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/routing.py#L3195-L3220"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 38,
+    "question": "Should my endpoint functions be async def or plain def?",
+    "answerable": true,
+    "answer": "Use `async def` unless your endpoint performs blocking I/O. A plain `def` path operation function is run in an external threadpool that is then awaited, instead of being called directly [1]. For trivial, compute-only functions, the docs say `async def` is better in FastAPI, and plain `def` is only preferable when the code does blocking I/O [1].\n\nBoth forms are allowed, and FastAPI handles either one [4].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/async.md",
+        "start_line": 418,
+        "end_line": 420,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/async.md#L418-L420"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/dependencies/index.md",
+        "start_line": 145,
+        "end_line": 157,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/dependencies/index.md#L145-L157"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 39,
+    "question": "How do I package my app in a Docker container?",
+    "answerable": true,
+    "answer": "FastAPI apps are commonly packaged as a **Linux container image**, usually built with [**Docker**](https://www.docker.com/) [1]. Once you have the image, you can deploy it with tools such as Docker Compose, Kubernetes, Docker Swarm Mode, Nomad, or a cloud service that accepts container images [2].\n\nTo build the image, go to the project directory, which contains your `Dockerfile` and your `app` directory, and run `docker build -t myimage .` [3]. The `.` tells Docker to use the current directory as the build context [3].\n\nTo run a container from the image, use `docker run -d --name mycontainer -p 80:80 myimage` [4].\n\nIf you manage dependencies with uv, the generated `requirements.txt` is an export used for the container build. Regenerate it when `uv.lock` changes [5].\n\nThe excerpts do not include the full contents of the `Dockerfile` itself.",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/deployment/docker.md",
+        "start_line": 3,
+        "end_line": 14,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/deployment/docker.md#L3-L14"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/deployment/docker.md",
+        "start_line": 587,
+        "end_line": 595,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/deployment/docker.md#L587-L595"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/deployment/docker.md",
+        "start_line": 314,
+        "end_line": 335,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/deployment/docker.md#L314-L335"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/deployment/docker.md",
+        "start_line": 339,
+        "end_line": 347,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/deployment/docker.md#L339-L347"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/deployment/docker.md",
+        "start_line": 133,
+        "end_line": 135,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/deployment/docker.md#L133-L135"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 40,
+    "question": "What command should I use to run the app in production?",
+    "answerable": true,
+    "answer": "For production, use `uv run fastapi run` [1]. The FastAPI docs also say to use `fastapi run` instead of `fastapi dev` in production [4].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/ai-development.md",
+        "start_line": 44,
+        "end_line": 50,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/ai-development.md#L44-L50"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/fastapi-cli.md",
+        "start_line": 43,
+        "end_line": 55,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/fastapi-cli.md#L43-L55"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 41,
+    "question": "How do I compress responses so they download faster?",
+    "answerable": true,
+    "answer": "You can compress responses with GZip by adding `GZipMiddleware` to your app. Import it from `fastapi.middleware.gzip` and register it with `app.add_middleware` [2]. The middleware handles GZip responses for any request whose `Accept-Encoding` header includes `\"gzip\"` [2]. It works with both standard and streaming responses [2].\n\n```python\nfrom fastapi import FastAPI\nfrom fastapi.middleware.gzip import GZipMiddleware\n\napp = FastAPI()\n\napp.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)\n\n\n@app.get(\"/\")\nasync def main():\n    return \"somebigcontent\"\n```\n\n[2]\n\nYou can tune two options. `minimum_size` sets the size in bytes below which responses are not compressed, and it defaults to `500` [1]. `compresslevel` is an integer from 1 to 9 that defaults to `9` [1]. A lower value compresses faster but produces larger files, while a higher value compresses more slowly and produces smaller files [1].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/advanced/middleware.md",
+        "start_line": 85,
+        "end_line": 86,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/middleware.md#L85-L86"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/advanced/middleware.md",
+        "start_line": 77,
+        "end_line": 83,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/middleware.md#L77-L83"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 42,
+    "question": "How do I force all requests to use HTTPS?",
+    "answerable": true,
+    "answer": "You can use the `HTTPSRedirectMiddleware`. It enforces that all incoming requests must either be `https` or `wss`, and any incoming `http` or `ws` request is redirected to the secure scheme instead [1].\n\nTo add it, import it and register it with `app.add_middleware()`:\n\n```python\nfrom fastapi import FastAPI\nfrom fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware\n\napp = FastAPI()\n\napp.add_middleware(HTTPSRedirectMiddleware)\n\n\n@app.get(\"/\")\nasync def main():\n    return {\"message\": \"Hello World\"}\n```\n\nThis is the middleware approach shown in the docs [1].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/advanced/middleware.md",
+        "start_line": 56,
+        "end_line": 60,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/middleware.md#L56-L60"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 43,
+    "question": "Can I run my existing Flask app inside a FastAPI app?",
+    "answerable": true,
+    "answer": "Yes, you can mount a Flask application inside a FastAPI app using `WSGIMiddleware` and `app.mount()`. The example wraps a Flask app with `WSGIMiddleware(flask_app)` and mounts it at `/v1` [1]. Requests under `/v1/` are then handled by Flask, and the remaining paths are handled by FastAPI [2].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/advanced/wsgi.md",
+        "start_line": 21,
+        "end_line": 23,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/wsgi.md#L21-L23"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/advanced/wsgi.md",
+        "start_line": 35,
+        "end_line": 51,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/wsgi.md#L35-L51"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 44,
+    "question": "How do I change the URL of the interactive docs page, or turn it off?",
+    "answerable": true,
+    "answer": "You can change the Swagger UI URL with the `docs_url` parameter, and it is served at `/docs` by default [2][1]. To turn it off, set `docs_url=None` [2][1]. For example, `FastAPI(docs_url=\"/documentation\", redoc_url=None)` serves Swagger UI at `/documentation` and disables ReDoc [1][2]. If `openapi_url` is set to `None`, the docs are automatically disabled [1].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "fastapi/applications.py",
+        "start_line": 420,
+        "end_line": 444,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/applications.py#L420-L444"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/metadata.md",
+        "start_line": 109,
+        "end_line": 118,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/metadata.md#L109-L118"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 45,
+    "question": "How do I set the title, description and version shown in the API docs?",
+    "answerable": true,
+    "answer": "The `title`, `summary`, `description`, and `version` fields are used in the OpenAPI specification and the automatic API docs UIs [1]. The `description` can use Markdown, and `version` is the version of your own application, not of OpenAPI [1]. The `version` parameter's documentation also says it is not the version of the OpenAPI specification or of FastAPI being used, and that it will appear in the generated OpenAPI, for example at `/docs` [2].\n\nTo set these values in a custom OpenAPI schema, call `get_openapi` with `title`, `version`, `summary`, and `description` arguments, along with `routes=app.routes` [3][4][5]. For example, `title=\"Custom title\"`, `version=\"2.5.0\"`, and `description=\"Here's a longer description of the custom **OpenAPI** schema\"` [3][4][5].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/metadata.md",
+        "start_line": 7,
+        "end_line": 14,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/metadata.md#L7-L14"
+      },
+      {
+        "n": 2,
+        "file": "fastapi/applications.py",
+        "start_line": 185,
+        "end_line": 216,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/applications.py#L185-L216"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/how-to/extending-openapi.md",
+        "start_line": 54,
+        "end_line": 54,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/how-to/extending-openapi.md#L54-L54"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/how-to/extending-openapi.md",
+        "start_line": 66,
+        "end_line": 66,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/how-to/extending-openapi.md#L66-L66"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/how-to/extending-openapi.md",
+        "start_line": 60,
+        "end_line": 60,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/how-to/extending-openapi.md#L60-L60"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 46,
+    "question": "How do I mark an old endpoint as deprecated?",
+    "answerable": true,
+    "answer": "To mark a single *path operation* as deprecated, set its `deprecated` parameter to `True`. The parameter is documented as marking the path operation as deprecated, and it will appear in the generated OpenAPI, visible at `/docs` [5].\n\nTo deprecate every path operation in a router, pass `deprecated=True` to `include_router`, as in the `old_api.router` example [1]. You can also mark all path operations of an application as deprecated with the app-level `deprecated` parameter, though the docs say you probably don't need it [2].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "fastapi/applications.py",
+        "start_line": 1550,
+        "end_line": 1588,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/applications.py#L1550-L1588"
+      },
+      {
+        "n": 2,
+        "file": "fastapi/applications.py",
+        "start_line": 728,
+        "end_line": 749,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/applications.py#L728-L749"
+      },
+      {
+        "n": 5,
+        "file": "fastapi/applications.py",
+        "start_line": 2931,
+        "end_line": 2961,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/applications.py#L2931-L2961"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 47,
+    "question": "How do I group my endpoints into sections in the docs page?",
+    "answerable": true,
+    "answer": "You group your endpoints by adding the `tags` parameter to your *path operations* (and `APIRouter`s), which groups them in the docs UI [1][5][2]. For example, `@app.get(\"/users/\", tags=[\"users\"])` and `@app.get(\"/items/\", tags=[\"items\"])` create two groups [4].\n\nYou can add a description and external documentation for each tag with the `openapi_tags` parameter, which takes a list with one dictionary per tag [2]. The `name` in each dictionary must match the tag name you use in the `tags` parameter [2]. The order of the tags in `openapi_tags` sets the order shown in tools like Swagger UI, used at the `/docs` path [4].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/how-to/general.md",
+        "start_line": 15,
+        "end_line": 15,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/how-to/general.md#L15-L15"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/metadata.md",
+        "start_line": 43,
+        "end_line": 53,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/metadata.md#L43-L53"
+      },
+      {
+        "n": 4,
+        "file": "fastapi/applications.py",
+        "start_line": 240,
+        "end_line": 259,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/applications.py#L240-L259"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/metadata.md",
+        "start_line": 73,
+        "end_line": 73,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/metadata.md#L73-L73"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 48,
+    "question": "How do I turn a Pydantic model that contains a datetime into plain JSON-compatible data?",
+    "answerable": true,
+    "answer": "You can use the `jsonable_encoder()` function from `fastapi.encoders` for this [5][1]. It receives an object, like a Pydantic model, and returns a JSON-compatible version [2]. In the example, you call `jsonable_encoder(item)` on the Pydantic model, which converts the model to a `dict` and the `datetime` to a `str` [1]. The `datetime` becomes a string in [ISO format](https://en.wikipedia.org/wiki/ISO_8601) [2].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/encoder.md",
+        "start_line": 23,
+        "end_line": 25,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/encoder.md#L23-L25"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/encoder.md",
+        "start_line": 11,
+        "end_line": 21,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/encoder.md#L11-L21"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/encoder.md",
+        "start_line": 3,
+        "end_line": 7,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/encoder.md#L3-L7"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 49,
+    "question": "How do I update only the fields the client actually sent?",
+    "answerable": true,
+    "answer": "Use Pydantic's `exclude_unset` option when you call `.model_dump()`. It produces a `dict` with only the data that was set in the request, leaving out default values [2]. For example, `item.model_dump(exclude_unset=True)` [2].\n\nThen apply those values to the stored data. Create a copy of the stored model and pass the partial updates with the `update` parameter [1]. The tutorial's `PATCH` example does this:\n\n```python\n@app.patch(\"/items/{item_id}\")\nasync def update_item(item_id: str, item: Item) -> Item:\n    stored_item_data = items[item_id]\n    stored_item_model = Item(**stored_item_data)\n    update_data = item.model_dump(exclude_unset=True)\n    updated_item = stored_item_model.model_copy(update=update_data)\n    items[item_id] = jsonable_encoder(updated_item)\n    return updated_item\n```\n[3]\n\nThe SQL databases tutorial uses the same idea. It gets a `dict` with only the client's data by using `exclude_unset=True`, then calls `hero_db.sqlmodel_update(hero_data)` [4].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/body-updates.md",
+        "start_line": 71,
+        "end_line": 78,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/body-updates.md#L71-L78"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/body-updates.md",
+        "start_line": 49,
+        "end_line": 55,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/body-updates.md#L49-L55"
+      },
+      {
+        "n": 3,
+        "file": "docs/en/docs/tutorial/body-updates.md",
+        "start_line": 57,
+        "end_line": 57,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/body-updates.md#L57-L57"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/sql-databases.md",
+        "start_line": 317,
+        "end_line": 321,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/sql-databases.md#L317-L321"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 50,
+    "question": "How do I only allow a path parameter to be one of a few fixed values?",
+    "answerable": true,
+    "answer": "You can use a standard Python `Enum` to predefine the valid values for a path parameter [1]. Then annotate the *path parameter* with the enum class you created [2]. Because the values are predefined, the interactive docs can show them [5].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/path-params.md",
+        "start_line": 133,
+        "end_line": 133,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/path-params.md#L133-L133"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/path-params.md",
+        "start_line": 153,
+        "end_line": 153,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/path-params.md#L153-L153"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/tutorial/path-params.md",
+        "start_line": 159,
+        "end_line": 161,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/path-params.md#L159-L161"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 51,
+    "question": "In FastAPI's source, how does OAuth2PasswordBearer pull the token out of the request?",
+    "answerable": true,
+    "answer": "`OAuth2PasswordBearer` defines an async `__call__` method that takes the request and reads the `Authorization` header with `request.headers.get(\"Authorization\")` [5]. It splits that value into a scheme and a parameter using `get_authorization_scheme_param` [5]. If the header is missing or the scheme is not `bearer` (case-insensitive), it raises the not-authenticated error when `auto_error` is set, and otherwise returns `None` [5]. Otherwise, it returns the parameter part of the header as the token [5].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 5,
+        "file": "fastapi/security/oauth2.py",
+        "start_line": 536,
+        "end_line": 544,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/security/oauth2.py#L536-L544"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 52,
+    "question": "What does FastAPI's code do when the Authorization header for HTTP Basic auth is malformed?",
+    "answerable": true,
+    "answer": "When the Authorization header is missing or does not use the `basic` scheme, FastAPI raises a not-authenticated error if `auto_error` is enabled, and otherwise returns `None` [4]. If the header uses the Basic scheme but the base64 payload cannot be decoded (raising `ValueError`, `UnicodeDecodeError`, or `binascii.Error`), FastAPI raises the not-authenticated error from that exception [4]. If the decoded value does not contain a colon separating username and password, FastAPI also raises the not-authenticated error [4].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 4,
+        "file": "fastapi/security/http.py",
+        "start_line": 204,
+        "end_line": 220,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/security/http.py#L204-L220"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 53,
+    "question": "Where in the FastAPI code is a plain def endpoint sent to a threadpool instead of being awaited?",
+    "answerable": true,
+    "answer": "In `fastapi/routing.py`, the function `run_endpoint_function` sends plain `def` endpoints to a threadpool. When `is_coroutine` is false, it calls `run_in_threadpool(_run_sync_endpoint, function=dependant.call, arguments=values)` and awaits the result [1]. When `is_coroutine` is true, it awaits the endpoint directly [1]. According to the docs, a `def` path operation function runs in an external threadpool that is then awaited, instead of being called directly [5]. The excerpt notes that `run_endpoint_function` is only called by `get_request_handler` [1].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "fastapi/routing.py",
+        "start_line": 363,
+        "end_line": 376,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/routing.py#L363-L376"
+      },
+      {
+        "n": 5,
+        "file": "docs/en/docs/async.md",
+        "start_line": 418,
+        "end_line": 420,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/async.md#L418-L420"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 54,
+    "question": "Which function in the FastAPI codebase decides whether a status code like 204 is allowed to have a response body?",
+    "answerable": true,
+    "answer": "The function is `is_body_allowed_for_status_code` in `fastapi/utils.py`. It returns `False` for status codes below 200 and for 204, 205, and 304, and `True` otherwise [2]. For a status code like 204, it therefore returns `False`, meaning no body is allowed [2].\n\nThe function is used when building responses in the route handler, where the body is cleared if the status code does not allow one [1]. It is also used by the default HTTP exception handler, which returns a response without a body when the status code does not allow one [3].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "fastapi/routing.py",
+        "start_line": 784,
+        "end_line": 804,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/routing.py#L784-L804"
+      },
+      {
+        "n": 2,
+        "file": "fastapi/utils.py",
+        "start_line": 26,
+        "end_line": 40,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/utils.py#L26-L40"
+      },
+      {
+        "n": 3,
+        "file": "fastapi/exception_handlers.py",
+        "start_line": 11,
+        "end_line": 17,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/exception_handlers.py#L11-L17"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 55,
+    "question": "How does FastAPI's built-in handler turn an HTTPException into a JSON response?",
+    "answerable": true,
+    "answer": "FastAPI's default exception handlers return JSON responses when you raise an `HTTPException` [4]. The built-in `http_exception_handler` reads any `headers` from the exception and checks whether the status code allows a response body. If the body is not allowed, it returns a `Response` with only the status code and headers [3]. Otherwise, it returns a `JSONResponse` whose body is `{\"detail\": exc.detail}`, using the exception's status code and headers [3].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 3,
+        "file": "fastapi/exception_handlers.py",
+        "start_line": 11,
+        "end_line": 17,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/exception_handlers.py#L11-L17"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/tutorial/handling-errors.md",
+        "start_line": 114,
+        "end_line": 118,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/handling-errors.md#L114-L118"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 56,
+    "question": "Where is the code that builds the default 422 response when request validation fails?",
+    "answerable": true,
+    "answer": "The default 422 response is built by `request_validation_exception_handler` in `fastapi/exception_handlers.py`. It returns a `JSONResponse` with `status_code=422` and content `{\"detail\": jsonable_encoder(exc.errors())}`. [1]\nFastAPI raises a `RequestValidationError` internally when request data is invalid, and it includes this default handler for that exception. [2]",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "fastapi/exception_handlers.py",
+        "start_line": 20,
+        "end_line": 26,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/exception_handlers.py#L20-L26"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/tutorial/handling-errors.md",
+        "start_line": 122,
+        "end_line": 128,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/handling-errors.md#L122-L128"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 57,
+    "question": "How does BackgroundTasks store a function so it runs after the response is sent?",
+    "answerable": true,
+    "answer": "`BackgroundTasks` is a collection of background tasks that are called after a response has been sent to the client [4]. Its `add_task` method accepts a function, which can be either a regular `def` function or an `async def` function, along with its arguments, and it simply passes them to `super().add_task(func, *args, **kwargs)` [1]. The excerpts do not show how the parent `add_task` stores the function internally.\n\nWhen the tasks run, `__call__` iterates over `self.tasks`, wraps each `task.func` in an operation context, and awaits each `task()` in turn [5].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "fastapi/background.py",
+        "start_line": 41,
+        "end_line": 62,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/background.py#L41-L62"
+      },
+      {
+        "n": 4,
+        "file": "fastapi/background.py",
+        "start_line": 12,
+        "end_line": 35,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/background.py#L12-L35"
+      },
+      {
+        "n": 5,
+        "file": "fastapi/background.py",
+        "start_line": 64,
+        "end_line": 67,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/background.py#L64-L67"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 58,
+    "question": "What happens inside FastAPI when an API key is missing from the request?",
+    "answerable": true,
+    "answer": "For header-based API keys, FastAPI's `__call__` reads the key with `request.headers.get(self.model.name)` and returns `self.check_api_key(api_key)` [1]. The query-parameter and cookie variants follow the same pattern, using `request.query_params` [4] and `request.cookies` [3].\n\nThe excerpts don't include `check_api_key`, so they don't show what happens when the key is missing. They don't say whether FastAPI rejects the request or raises an error.",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "fastapi/security/api_key.py",
+        "start_line": 230,
+        "end_line": 232,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/security/api_key.py#L230-L232"
+      },
+      {
+        "n": 3,
+        "file": "fastapi/security/api_key.py",
+        "start_line": 318,
+        "end_line": 320,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/security/api_key.py#L318-L320"
+      },
+      {
+        "n": 4,
+        "file": "fastapi/security/api_key.py",
+        "start_line": 142,
+        "end_line": 144,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/security/api_key.py#L142-L144"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 59,
+    "question": "How does FastAPI's source generate the unique operation ID for each route?",
+    "answerable": true,
+    "answer": "FastAPI's default `generate_unique_id` builds the ID from the route's name and path format. It concatenates `route.name` and `route.path_format`, replaces every non-word character with an underscore, and then appends an underscore and the lowercased first HTTP method from `route.methods` [1]. The function asserts that `route.methods` is set before it reads the method [1].\n\nThe path operation decorators (`get`, `patch`, `trace`, and others) take a `generate_unique_id_function` parameter whose default is `Default(generate_unique_id)` [2][3][5].\n\nYou can replace this behavior by passing a custom `generate_unique_id_function` to `FastAPI`. The function receives each `APIRoute` and returns the operation ID to use. For example, a function that returns `route.name` makes the function name the `operationId` [4]. In that case, each path operation function must have a unique name [4].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "fastapi/utils.py",
+        "start_line": 95,
+        "end_line": 100,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/utils.py#L95-L100"
+      },
+      {
+        "n": 2,
+        "file": "fastapi/applications.py",
+        "start_line": 4630,
+        "end_line": 4655,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/applications.py#L4630-L4655"
+      },
+      {
+        "n": 3,
+        "file": "fastapi/applications.py",
+        "start_line": 4252,
+        "end_line": 4276,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/applications.py#L4252-L4276"
+      },
+      {
+        "n": 4,
+        "file": "docs/en/docs/advanced/path-operation-advanced-configuration.md",
+        "start_line": 19,
+        "end_line": 27,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/path-operation-advanced-configuration.md#L19-L27"
+      },
+      {
+        "n": 5,
+        "file": "fastapi/applications.py",
+        "start_line": 2004,
+        "end_line": 2029,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/applications.py#L2004-L2029"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": true
+  },
+  {
+    "id": 60,
+    "question": "In FastAPI's code, how is the final status code of a response chosen when I also set one on the Response parameter?",
+    "answerable": true,
+    "answer": "The excerpts describe the decorator's `status_code` parameter and say it can be overridden by returning a response directly, but they don't explain how a status code set on a Response parameter interacts with it.\n\nThe `status_code` parameter sets the default status code for the response [3]. That default can be overridden by returning a response directly [3]. By default, FastAPI returns the content from your *path operation* in a `JSONResponse`, using either the default status code or the one set in the *path operation* [2]. The `status_code` parameter belongs to the decorator method (such as `get` or `post`), not to the *path operation function* [1].",
+    "abstained": false,
+    "sources": [
+      {
+        "n": 1,
+        "file": "docs/en/docs/tutorial/response-status-code.md",
+        "start_line": 3,
+        "end_line": 17,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/tutorial/response-status-code.md#L3-L17"
+      },
+      {
+        "n": 2,
+        "file": "docs/en/docs/advanced/additional-status-codes.md",
+        "start_line": 3,
+        "end_line": 5,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/docs/en/docs/advanced/additional-status-codes.md#L3-L5"
+      },
+      {
+        "n": 3,
+        "file": "fastapi/routing.py",
+        "start_line": 3470,
+        "end_line": 3494,
+        "url": "https://github.com/fastapi/fastapi/blob/b2831196bfee3eb9ce303a3c6440f2a104832954/fastapi/routing.py#L3470-L3494"
+      }
+    ],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 61,
+    "question": "How do I enable FastAPI's built-in admin panel?",
+    "answerable": false,
+    "answer": "I don't know based on the FastAPI docs and code.",
+    "abstained": true,
+    "sources": [],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 62,
+    "question": "How do I turn on FastAPI's built-in rate limiting for an endpoint?",
+    "answerable": false,
+    "answer": "I don't know based on the FastAPI docs and code.",
+    "abstained": true,
+    "sources": [],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 63,
+    "question": "How do I configure FastAPI's built-in scheduler to run a job every night at 2am?",
+    "answerable": false,
+    "answer": "I don't know based on the FastAPI docs and code.",
+    "abstained": true,
+    "sources": [],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 64,
+    "question": "What is the default username and password for the FastAPI dashboard?",
+    "answerable": false,
+    "answer": "I don't know based on the FastAPI docs and code.",
+    "abstained": true,
+    "sources": [],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 65,
+    "question": "Which FastAPI setting turns on automatic database sharding?",
+    "answerable": false,
+    "answer": "I don't know based on the FastAPI docs and code.",
+    "abstained": true,
+    "sources": [],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 66,
+    "question": "How do I enable FastAPI's built-in WebAssembly compiler?",
+    "answerable": false,
+    "answer": "I don't know based on the FastAPI docs and code.",
+    "abstained": true,
+    "sources": [],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 67,
+    "question": "How do I train a PyTorch model on my GPU?",
+    "answerable": false,
+    "answer": "I don't know based on the FastAPI docs and code.",
+    "abstained": true,
+    "sources": [],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 68,
+    "question": "What's the capital of Australia?",
+    "answerable": false,
+    "answer": "I don't know based on the FastAPI docs and code.",
+    "abstained": true,
+    "sources": [],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 69,
+    "question": "How do I center a div with CSS?",
+    "answerable": false,
+    "answer": "I don't know based on the FastAPI docs and code.",
+    "abstained": true,
+    "sources": [],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  },
+  {
+    "id": 70,
+    "question": "How do I write a FastAPI app in Go?",
+    "answerable": false,
+    "answer": "I don't know based on the FastAPI docs and code.",
+    "abstained": true,
+    "sources": [],
+    "invalid_citations": [],
+    "uncited": false,
+    "correct_citation": false
+  }
+]

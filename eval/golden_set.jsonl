@@ -58,3 +58,13 @@
 {"id": 58, "question": "What happens inside FastAPI when an API key is missing from the request?", "relevant": [{"file": "fastapi/security/api_key.py", "lines": [47, 52]}, {"file": "fastapi/security/api_key.py", "lines": [230, 232]}]}
 {"id": 59, "question": "How does FastAPI's source generate the unique operation ID for each route?", "relevant": [{"file": "fastapi/utils.py", "lines": [95, 100]}]}
 {"id": 60, "question": "In FastAPI's code, how is the final status code of a response chosen when I also set one on the Response parameter?", "relevant": [{"file": "fastapi/routing.py", "lines": [379, 395]}]}
+{"id": 61, "question": "How do I enable FastAPI's built-in admin panel?", "relevant": []}
+{"id": 62, "question": "How do I turn on FastAPI's built-in rate limiting for an endpoint?", "relevant": []}
+{"id": 63, "question": "How do I configure FastAPI's built-in scheduler to run a job every night at 2am?", "relevant": []}
+{"id": 64, "question": "What is the default username and password for the FastAPI dashboard?", "relevant": []}
+{"id": 65, "question": "Which FastAPI setting turns on automatic database sharding?", "relevant": []}
+{"id": 66, "question": "How do I enable FastAPI's built-in WebAssembly compiler?", "relevant": []}
+{"id": 67, "question": "How do I train a PyTorch model on my GPU?", "relevant": []}
+{"id": 68, "question": "What's the capital of Australia?", "relevant": []}
+{"id": 69, "question": "How do I center a div with CSS?", "relevant": []}
+{"id": 70, "question": "How do I write a FastAPI app in Go?", "relevant": []}

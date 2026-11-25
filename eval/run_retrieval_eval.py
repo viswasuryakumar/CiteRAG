@@ -63,6 +63,8 @@ def main() -> None:
     run_name = sys.argv[1] if len(sys.argv) > 1 else "naive"
     retrieve = load_retriever(run_name)
     items = [json.loads(line) for line in GOLDEN_SET.open(encoding="utf-8")]
+    # Unanswerable questions (empty "relevant") have no correct chunk to find; run_answer_eval.py scores them.
+    items = [item for item in items if item["relevant"]]
 
     rows = []
     for item in items:
