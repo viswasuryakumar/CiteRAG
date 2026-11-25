@@ -4,6 +4,9 @@ numpy
 openai
 python-dotenv
 pgvector
+fastapi>=0.135   # 0.135 added fastapi.sse (Server-Sent Events)
+uvicorn
+langsmith
 # Pinned: newer builds of these two are blocked by Windows Application Control on this laptop.
 jiter==0.18.0
 psycopg[binary]==3.2.9

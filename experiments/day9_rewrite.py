@@ -13,6 +13,8 @@ Run:   python experiments/day9_rewrite.py "How do I read a value from the URL, l
 import sys
 from functools import lru_cache
 
+from langsmith import traceable
+
 from day3_ask import MODEL, TOP_K, client, generate
 from day6_hybrid import CHUNKS_BY_ID, bm25_search, reciprocal_rank_fusion, vector_search
 from day7_rerank import RERANK_CANDIDATES, rerank
@@ -23,6 +25,7 @@ Keep every exact name from the question unchanged: classes, functions, parameter
 Reply with only the rewritten query, one line, no explanation."""
 
 
+@traceable(name="rewrite query")
 @lru_cache(maxsize=None)   # same question -> reuse the rewrite instead of paying for another LLM call
 def rewrite(question: str) -> str:
     response = client.chat.completions.create(
@@ -36,6 +39,7 @@ def rewrite(question: str) -> str:
     return response.choices[0].message.content.strip()
 
 
+@traceable(name="hybrid search", run_type="retriever")
 def search_both(question: str, k: int) -> list[dict]:
     """Vector + BM25 for the original AND the rewritten question, merged with RRF."""
     ranked_lists = []

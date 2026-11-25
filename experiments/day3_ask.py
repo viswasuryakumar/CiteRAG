@@ -9,6 +9,7 @@ from pathlib import Path
 
 import psycopg
 from dotenv import load_dotenv
+from langsmith.wrappers import wrap_openai
 from openai import OpenAI
 from pgvector.psycopg import register_vector
 from sentence_transformers import SentenceTransformer
@@ -28,7 +29,11 @@ If the excerpts don't contain the answer, say you don't know instead of guessing
 
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
 # OpenRouter speaks the same API format as OpenAI, so the OpenAI client works with a different URL.
-client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
+# wrap_openai: if LANGSMITH_TRACING=true in .env, every LLM call (prompt, answer, tokens, time)
+# is recorded in LangSmith. Without that setting it does nothing.
+client = wrap_openai(
+    OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
+)
 
 
 def retrieve(question: str, k: int = TOP_K) -> list[dict]:

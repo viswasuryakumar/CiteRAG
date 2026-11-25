@@ -1,5 +1,6 @@
 """Day 10: the final answer step. Every fact cites its source, and the model says "I don't know"
 when the retrieved chunks don't contain the answer.
+Day 11: the answer can also be streamed token by token (answer_events), for the web API.
 
 Pipeline: query rewriting + hybrid search (Day 9, our best retriever) -> LLM answer with [n] markers
 -> we turn each [n] into a file + line range + GitHub link, and check the markers are valid.
@@ -9,6 +10,9 @@ Run:   python experiments/day10_answer.py "How do I return a 404 error?"
 """
 import re
 import sys
+from collections.abc import Iterator
+
+from langsmith import traceable
 
 from day3_ask import MODEL, build_prompt, client
 from day9_rewrite import retrieve
@@ -36,45 +40,80 @@ def github_link(chunk: dict) -> str:
             f"#L{chunk['start_line']}-L{chunk['end_line']}")
 
 
-def answer(question: str) -> dict:
-    """Retrieve, generate, then turn the [n] markers into real sources."""
-    chunks = retrieve(question)
-    response = client.chat.completions.create(
+def source_info(n: int, chunk: dict) -> dict:
+    """What the user sees for excerpt [n]: where it is, not its full text."""
+    return {"n": n, "file": chunk["file"], "start_line": chunk["start_line"],
+            "end_line": chunk["end_line"], "url": github_link(chunk)}
+
+
+def parse_citations(text: str, chunks: list[dict]) -> dict:
+    """Turn the [n] markers in a finished answer into sources, and flag problems."""
+    # Every [n] in the answer. A number outside 1..len(chunks) points at nothing: an invalid citation.
+    cited = sorted({int(n) for n in re.findall(r"\[(\d+)\]", text)})
+    valid = [n for n in cited if 1 <= n <= len(chunks)]
+    abstained = text.strip().startswith("I don't know")
+    return {
+        "answer": text.strip(),
+        "abstained": abstained,
+        "sources": [source_info(n, chunks[n - 1]) for n in valid],   # only the ones actually used
+        "invalid_citations": [n for n in cited if n not in valid],
+        "uncited": not cited and not abstained,   # answered, but cited nothing
+    }
+
+
+def stream_generate(question: str, chunks: list[dict]) -> Iterator[str]:
+    """The LLM call with stream=True: yields the answer a few characters at a time."""
+    stream = client.chat.completions.create(
         model=MODEL,
+        stream=True,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": build_prompt(question, chunks)},
         ],
     )
-    text = response.choices[0].message.content.strip()
+    for event in stream:
+        if event.choices and event.choices[0].delta.content:
+            yield event.choices[0].delta.content
 
-    # Every [n] in the answer. A number outside 1..len(chunks) points at nothing: an invalid citation.
-    cited = sorted({int(n) for n in re.findall(r"\[(\d+)\]", text)})
-    valid = [n for n in cited if 1 <= n <= len(chunks)]
-    invalid = [n for n in cited if n not in valid]
 
-    sources = [
-        {"n": n, "file": chunks[n - 1]["file"], "start_line": chunks[n - 1]["start_line"],
-         "end_line": chunks[n - 1]["end_line"], "url": github_link(chunks[n - 1])}
-        for n in valid
-    ]
-    return {
-        "answer": text,
-        "abstained": text.startswith("I don't know"),
-        "sources": sources,               # only the chunks the answer actually used
-        "invalid_citations": invalid,
-        "uncited": not cited and not text.startswith("I don't know"),   # answered, but cited nothing
-        "chunks": chunks,
-    }
+@traceable(name="CiteRAG answer")   # in LangSmith, the whole request shows as one trace
+def answer_events(question: str) -> Iterator[tuple[str, object]]:
+    """The full pipeline as a stream of (event name, data) pairs:
+         ("sources", [...])  first: the 5 retrieved excerpts, so the page can show them early
+         ("token", "...")    many times: pieces of the answer as the LLM writes them
+         ("done", {...})     last: citations checked, abstained or not
+    """
+    chunks = retrieve(question)
+    yield "sources", [source_info(n, c) for n, c in enumerate(chunks, start=1)]
+
+    text = ""
+    for token in stream_generate(question, chunks):
+        text += token
+        yield "token", token
+
+    yield "done", parse_citations(text, chunks)
+
+
+def answer(question: str) -> dict:
+    """Not streamed: run the whole pipeline and return the final result (used by the eval)."""
+    for event, data in answer_events(question):
+        if event == "done":
+            return data
 
 
 def main() -> None:
     question = " ".join(sys.argv[1:]) or "How do I return a 404 error?"
-    result = answer(question)
+    print(f"Q: {question}\n")
 
-    print(f"Q: {question}\n\n{result['answer']}\n")
+    for event, data in answer_events(question):
+        if event == "token":
+            print(data, end="", flush=True)   # appears word by word, like in a chat app
+        elif event == "done":
+            result = data
+
+    print()
     if result["sources"]:
-        print("Sources:")
+        print("\nSources:")
         for s in result["sources"]:
             print(f"  [{s['n']}] {s['file']}:{s['start_line']}-{s['end_line']}\n      {s['url']}")
     if result["invalid_citations"]:
