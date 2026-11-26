@@ -47,7 +47,10 @@ export default function App() {
     stream.onerror = () => {
       stream.close()
       setLoading(false)
-      setError('Could not reach the CiteRAG API. Is it running on ' + API_URL + '?')
+      // EventSource can't tell us the HTTP status, so this covers both "API down" and
+      // "rate limit reached" (429).
+      setError('Could not get an answer. The API may be starting up or busy, or you have reached ' +
+        'the limit of questions per hour. Please try again in a moment.')
     }
   }
 
