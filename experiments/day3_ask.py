@@ -12,7 +12,8 @@ from dotenv import load_dotenv
 from langsmith.wrappers import wrap_openai
 from openai import OpenAI
 from pgvector.psycopg import register_vector
-from sentence_transformers import SentenceTransformer
+
+from onnx_embedder import OnnxEmbedder
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(PROJECT_DIR / ".env")   # loads OPENROUTER_API_KEY and DATABASE_URL from .env
@@ -27,7 +28,9 @@ SYSTEM_PROMPT = """You answer questions about FastAPI using only the excerpts pr
 Cite the excerpts you used by their number, like [2].
 If the excerpts don't contain the answer, say you don't know instead of guessing."""
 
-embedder = SentenceTransformer("all-MiniLM-L6-v2")
+# Embeds each question. Day 13: runs all-MiniLM-L6-v2 with ONNX Runtime instead of PyTorch
+# (identical vectors, far less memory). The chunks were embedded with sentence-transformers in day3_ingest.py.
+embedder = OnnxEmbedder()
 # OpenRouter speaks the same API format as OpenAI, so the OpenAI client works with a different URL.
 # wrap_openai: if LANGSMITH_TRACING=true in .env, every LLM call (prompt, answer, tokens, time)
 # is recorded in LangSmith. Without that setting it does nothing.

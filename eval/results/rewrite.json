@@ -1,14 +1,14 @@
 {
   "recall_at_k": 0.8833333333333333,
-  "mrr_at_k": 0.6763888888888889,
+  "mrr_at_k": 0.6844444444444445,
   "k": 5,
   "rows": [
     {
       "id": 1,
       "question": "How do I return a 404 error?",
-      "rank": 5,
+      "rank": 4,
       "hit": true,
-      "reciprocal_rank": 0.2
+      "reciprocal_rank": 0.25
     },
     {
       "id": 2,
@@ -41,9 +41,9 @@
     {
       "id": 6,
       "question": "How do I force the client to always send a certain query parameter?",
-      "rank": 3,
+      "rank": 2,
       "hit": true,
-      "reciprocal_rank": 0.3333333333333333
+      "reciprocal_rank": 0.5
     },
     {
       "id": 7,
@@ -125,21 +125,21 @@
     {
       "id": 18,
       "question": "How do I reuse the same setup logic, like getting a DB session, across many endpoints?",
-      "rank": 1,
+      "rank": 4,
       "hit": true,
-      "reciprocal_rank": 1.0
+      "reciprocal_rank": 0.25
     },
     {
       "id": 19,
       "question": "How do I close the database connection after each request is done?",
-      "rank": 1,
+      "rank": 4,
       "hit": true,
-      "reciprocal_rank": 1.0
+      "reciprocal_rank": 0.25
     },
     {
       "id": 20,
       "question": "How do I run an API key check on every endpoint without repeating it everywhere?",
-      "rank": 13,
+      "rank": 15,
       "hit": false,
       "reciprocal_rank": 0.0
     },
@@ -160,9 +160,9 @@
     {
       "id": 23,
       "question": "How do I serve images and CSS files from a folder?",
-      "rank": 5,
+      "rank": 3,
       "hit": true,
-      "reciprocal_rank": 0.2
+      "reciprocal_rank": 0.3333333333333333
     },
     {
       "id": 24,
@@ -181,9 +181,9 @@
     {
       "id": 26,
       "question": "How do I build a login where users send a username and password and get a token back?",
-      "rank": 5,
+      "rank": 2,
       "hit": true,
-      "reciprocal_rank": 0.2
+      "reciprocal_rank": 0.5
     },
     {
       "id": 27,
@@ -195,9 +195,9 @@
     {
       "id": 28,
       "question": "How do I create and check JWT tokens?",
-      "rank": 1,
+      "rank": 2,
       "hit": true,
-      "reciprocal_rank": 1.0
+      "reciprocal_rank": 0.5
     },
     {
       "id": 29,
@@ -251,9 +251,9 @@
     {
       "id": 36,
       "question": "How do I add my own header to a response?",
-      "rank": 3,
+      "rank": 2,
       "hit": true,
-      "reciprocal_rank": 0.3333333333333333
+      "reciprocal_rank": 0.5
     },
     {
       "id": 37,
@@ -272,14 +272,14 @@
     {
       "id": 39,
       "question": "How do I package my app in a Docker container?",
-      "rank": 2,
+      "rank": 1,
       "hit": true,
-      "reciprocal_rank": 0.5
+      "reciprocal_rank": 1.0
     },
     {
       "id": 40,
       "question": "What command should I use to run the app in production?",
-      "rank": 8,
+      "rank": 11,
       "hit": false,
       "reciprocal_rank": 0.0
     },
@@ -349,16 +349,16 @@
     {
       "id": 50,
       "question": "How do I only allow a path parameter to be one of a few fixed values?",
-      "rank": 2,
+      "rank": 1,
       "hit": true,
-      "reciprocal_rank": 0.5
+      "reciprocal_rank": 1.0
     },
     {
       "id": 51,
       "question": "In FastAPI's source, how does OAuth2PasswordBearer pull the token out of the request?",
-      "rank": 3,
+      "rank": 4,
       "hit": true,
-      "reciprocal_rank": 0.3333333333333333
+      "reciprocal_rank": 0.25
     },
     {
       "id": 52,
@@ -377,9 +377,9 @@
     {
       "id": 54,
       "question": "Which function in the FastAPI codebase decides whether a status code like 204 is allowed to have a response body?",
-      "rank": 4,
+      "rank": 1,
       "hit": true,
-      "reciprocal_rank": 0.25
+      "reciprocal_rank": 1.0
     },
     {
       "id": 55,
@@ -419,7 +419,7 @@
     {
       "id": 60,
       "question": "In FastAPI's code, how is the final status code of a response chosen when I also set one on the Response parameter?",
-      "rank": 24,
+      "rank": null,
       "hit": false,
       "reciprocal_rank": 0.0
     }

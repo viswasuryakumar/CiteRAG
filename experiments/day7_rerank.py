@@ -8,8 +8,7 @@ Needs: the database filled by day3_ingest.py (and OPENROUTER_API_KEY in .env to 
 Run:   python experiments/day7_rerank.py "How do I return a 404 error?"
 """
 import sys
-
-from sentence_transformers import CrossEncoder
+from functools import cache
 
 from day3_ask import TOP_K, generate
 from day6_hybrid import retrieve as hybrid_retrieve
@@ -21,7 +20,12 @@ RERANK_CANDIDATES = 20   # how many hybrid results the cross-encoder rescores
 #   cross-encoder/ms-marco-MiniLM-L6-v2   recall@5 0.76   0.45 s/question  (trained on web search only)
 #   mixedbread-ai/mxbai-rerank-xsmall-v1  recall@5 0.92   1.4 s/question   <- chosen
 #   BAAI/bge-reranker-base                recall@5 0.78   37 s/question on this CPU
-reranker = CrossEncoder("mixedbread-ai/mxbai-rerank-xsmall-v1")
+#
+# Loaded on first use, not at import: the deployed API never reranks, so it never needs PyTorch.
+@cache
+def load_reranker():
+    from sentence_transformers import CrossEncoder
+    return CrossEncoder("mixedbread-ai/mxbai-rerank-xsmall-v1")
 
 
 def retrieve(question: str, k: int = TOP_K) -> list[dict]:
@@ -39,7 +43,7 @@ def rerank(question: str, candidates: list[dict], k: int) -> list[dict]:
     # One (question, chunk text) pair per candidate. The model joins each pair into one input:
     #   [CLS] question [SEP] heading + chunk text [SEP]  ->  one score (higher = more relevant)
     pairs = [(question, f"{c['heading']}\n\n{c['text']}") for c in to_rerank]
-    scores = reranker.predict(pairs)
+    scores = load_reranker().predict(pairs)
 
     for chunk, score in zip(to_rerank, scores):
         chunk["rerank_score"] = float(score)

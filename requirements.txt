@@ -1,12 +1,14 @@
-sentence-transformers
-transformers
-numpy
-openai
-python-dotenv
-pgvector
+# What the API needs to run (this is what the server installs). No PyTorch.
 fastapi>=0.135   # 0.135 added fastapi.sse (Server-Sent Events)
 uvicorn
+openai
 langsmith
+python-dotenv
+numpy
+onnxruntime     # runs the embedding model without PyTorch (Day 13)
+tokenizers
+huggingface_hub
+pgvector
 # Pinned: newer builds of these two are blocked by Windows Application Control on this laptop.
 jiter==0.18.0
 psycopg[binary]==3.2.9

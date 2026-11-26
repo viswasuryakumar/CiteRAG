@@ -1,0 +1,5 @@
+# Everything for local work: chunking, ingesting, the reranker and the evals.
+# Install with: pip install -r requirements-dev.txt
+-r requirements.txt
+sentence-transformers
+transformers
