@@ -1,0 +1,9 @@
+# Upload ONLY what the API needs. Everything else (.env with secrets, .venv, data/, frontend/) stays local.
+/*
+!/api
+!/experiments
+!/app.py
+!/requirements.txt
+!/.python-version
+!/vercel.json
+__pycache__
